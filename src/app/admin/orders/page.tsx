@@ -85,7 +85,7 @@ export default function AdminOrdersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border/50 bg-white/40">
+              <tr className="border-b border-border/50 bg-muted/40">
                 <th className="p-4 font-medium text-muted-foreground">Order ID</th>
                 <th className="p-4 font-medium text-muted-foreground">Customer</th>
                 <th className="p-4 font-medium text-muted-foreground">Date</th>
@@ -117,7 +117,7 @@ export default function AdminOrdersPage() {
                   const matchesStatus = selectedStatus === 'All' || o.status === selectedStatus;
                   return matchesSearch && matchesStatus;
                 }).map((order) => (
-                  <tr key={order.id} className="border-b border-border/50 last:border-0 hover:bg-white/40 transition-colors">
+                  <tr key={order.id} className="border-b border-border/50 last:border-0 hover:bg-muted/40 transition-colors">
                     <td className="p-4 font-medium text-foreground">
                       #{order.id.substring(0, 8)}
                     </td>

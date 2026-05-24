@@ -2,7 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { PackageSearch, Plus, MoreHorizontal, Check, X, ShieldCheck, Leaf, Search } from 'lucide-react';
+import { 
+  PackageSearch, 
+  Plus, 
+  MoreHorizontal, 
+  Check, 
+  X, 
+  ShieldCheck, 
+  Leaf, 
+  Search,
+  Loader2, 
+  Save,
+  Edit2,
+  Eye,
+  EyeOff,
+  Trash2
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types';
@@ -10,10 +25,15 @@ import { useToast } from '@/hooks/use-toast';
 import { TabMolecule } from '@/components/shared/molecules/tabs';
 import { Modal } from '@/components/shared/molecules/modal';
 import { Label } from '@/components/ui/label';
-import { Loader2, Save } from 'lucide-react';
 import { Input } from '@/components/shared/atoms/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
 import { Db } from '@/lib/db';
 import type { Category } from '@/types';
 
@@ -28,6 +48,7 @@ export default function AdminProductsPage() {
   const [formData, setFormData] = useState<Partial<Product>>({
     name: '', breed: '', mainCategory: '', description: '', isVisible: true, customMeta: {}
   });
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const { toast } = useToast();
 
   const fetchProductsAndCategories = async () => {
@@ -52,6 +73,58 @@ export default function AdminProductsPage() {
     fetchProductsAndCategories();
   }, []);
 
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setFormData({
+      name: product.name,
+      breed: product.breed,
+      mainCategory: typeof product.mainCategory === 'string' ? product.mainCategory : (product.mainCategory as any).name,
+      description: product.description,
+      images: product.images,
+      isVisible: product.isVisible,
+      customMeta: product.customMeta || {},
+      careLevel: product.careLevel,
+      available: product.available,
+      sizes: product.sizes
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleToggleVisibility = async (product: Product) => {
+    try {
+      const res = await fetch(`/api/db/products/${product.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isVisible: !product.isVisible }),
+      });
+      if (res.ok) {
+        toast({ title: 'Success', description: `Product is now ${!product.isVisible ? 'visible' : 'hidden'}.` });
+        fetchProductsAndCategories();
+      } else {
+        throw new Error();
+      }
+    } catch {
+      toast({ title: 'Error', description: 'Failed to update visibility', variant: 'destructive' });
+    }
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    try {
+      const res = await fetch(`/api/db/products/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast({ title: 'Success', description: 'Product deleted successfully.' });
+        fetchProductsAndCategories();
+      } else {
+        throw new Error();
+      }
+    } catch {
+      toast({ title: 'Error', description: 'Failed to delete product', variant: 'destructive' });
+    }
+  };
+
   const handleSave = async () => {
     if (!formData.name || !formData.mainCategory) {
       toast({ title: 'Error', description: 'Name and Category are required.', variant: 'destructive' });
@@ -67,13 +140,61 @@ export default function AdminProductsPage() {
 
     setIsSaving(true);
     try {
-      // Typically you would post to /api/db/products here
-      // For now we'll just mock it and refresh
-      toast({ title: 'Success', description: 'Product created successfully!' });
+      if (editingProduct) {
+        // Edit existing product
+        const res = await fetch(`/api/db/products/${editingProduct.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name,
+            breed: formData.breed || formData.name,
+            mainCategory: formData.mainCategory,
+            images: formData.images || [],
+            description: formData.description || '',
+            customMeta: formData.customMeta || {},
+            careLevel: formData.careLevel || editingProduct.careLevel || 'beginner',
+            isVisible: formData.isVisible !== undefined ? formData.isVisible : editingProduct.isVisible,
+            available: formData.available !== undefined ? formData.available : editingProduct.available,
+            sizes: formData.sizes || editingProduct.sizes || [{ size: 'Standard', price: 99, stock: 10 }]
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to update product');
+        }
+
+        toast({ title: 'Success', description: 'Product updated successfully!' });
+      } else {
+        // Create new product
+        const newId = Math.random().toString(36).substring(2, 9);
+        const res = await fetch('/api/db/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: newId,
+            name: formData.name,
+            breed: formData.breed || formData.name,
+            mainCategory: formData.mainCategory,
+            images: formData.images || [],
+            description: formData.description || '',
+            customMeta: formData.customMeta || {},
+            careLevel: formData.careLevel || 'beginner',
+            isVisible: formData.isVisible !== undefined ? formData.isVisible : true,
+            available: formData.available !== undefined ? formData.available : true,
+            sizes: formData.sizes || [{ size: 'Standard', price: 99, stock: 10 }]
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to create product');
+        }
+
+        toast({ title: 'Success', description: 'Product created successfully!' });
+      }
       setIsModalOpen(false);
       fetchProductsAndCategories();
     } catch (err) {
-      toast({ title: 'Error', description: 'Failed to create product', variant: 'destructive' });
+      toast({ title: 'Error', description: editingProduct ? 'Failed to update product' : 'Failed to create product', variant: 'destructive' });
     } finally {
       setIsSaving(false);
     }
@@ -88,7 +209,13 @@ export default function AdminProductsPage() {
           <h1 className="font-heading text-3xl font-bold text-foreground">Product Management</h1>
           <p className="text-muted-foreground mt-1">Manage your pet catalog, stock, and descriptions.</p>
         </div>
-        <Button className="rounded-xl shadow-md h-12 px-6" onClick={() => setIsModalOpen(true)}>
+        <Button className="rounded-xl shadow-md h-12 px-6" onClick={() => {
+          setEditingProduct(null);
+          setFormData({
+            name: '', breed: '', mainCategory: '', description: '', isVisible: true, customMeta: {}
+          });
+          setIsModalOpen(true);
+        }}>
           <Plus className="h-5 w-5 mr-2" />
           Add New Product
         </Button>
@@ -122,7 +249,7 @@ export default function AdminProductsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border/50 bg-white/40">
+              <tr className="border-b border-border/50 bg-muted/40">
                 <th className="p-4 font-medium text-muted-foreground">Pet</th>
                 <th className="p-4 font-medium text-muted-foreground">Category</th>
                 <th className="p-4 font-medium text-muted-foreground">Breed</th>
@@ -158,7 +285,7 @@ export default function AdminProductsPage() {
                   if (catA > catB) return 1;
                   return a.name.localeCompare(b.name);
                 }).map((product) => (
-                  <tr key={product.id} className="border-b border-border/50 last:border-0 hover:bg-white/40 transition-colors">
+                  <tr key={product.id} className="border-b border-border/50 last:border-0 hover:bg-muted/40 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-4">
                         <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted shrink-0 border border-border/50">
@@ -190,9 +317,45 @@ export default function AdminProductsPage() {
                       )}
                     </td>
                     <td className="p-4 text-right">
-                      <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary">
-                        <MoreHorizontal className="h-5 w-5" />
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger render={
+                          <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary">
+                            <MoreHorizontal className="h-5 w-5" />
+                          </Button>
+                        } />
+                        <DropdownMenuContent align="end" className="bg-background border-border shadow-xl">
+                          <DropdownMenuItem 
+                            onClick={() => handleEditProduct(product)}
+                            className="cursor-pointer flex items-center gap-2"
+                          >
+                            <Edit2 className="h-4 w-4 text-muted-foreground" />
+                            Edit Product
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleToggleVisibility(product)}
+                            className="cursor-pointer flex items-center gap-2"
+                          >
+                            {product.isVisible ? (
+                              <>
+                                <EyeOff className="h-4 w-4 text-muted-foreground" />
+                                Hide Product
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="h-4 w-4 text-muted-foreground" />
+                                Show Product
+                              </>
+                            )}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleDeleteProduct(product.id)}
+                            className="cursor-pointer flex items-center gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Delete Product
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </td>
                   </tr>
                 ))
@@ -205,7 +368,7 @@ export default function AdminProductsPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Add New Product"
+        title={editingProduct ? "Edit Product" : "Add New Product"}
         variant="default"
       >
         <div className="space-y-4 py-4">
