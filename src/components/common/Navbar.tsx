@@ -25,6 +25,10 @@ export function Navbar() {
   const pathname = usePathname();
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  if (pathname === '/login') {
+    return null;
+  }
+
   const getLinkClasses = (path: string) => {
     const isActive = path === '/' ? pathname === '/' : (pathname === path || pathname.startsWith(`${path}/`));
     return `text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`;
@@ -173,8 +177,8 @@ export function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link href="/login" className="hidden sm:inline-block">
-                  <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-medium rounded-full px-6">
+                <Link href="/login" className="inline-block">
+                  <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-medium rounded-full px-4 sm:px-6">
                     Sign In
                   </Button>
                 </Link>
@@ -200,6 +204,14 @@ export function Navbar() {
                           Care Guides
                         </DropdownMenuItem>
                       </Link>
+                      {!isAuthenticated && (
+                        <Link href="/login">
+                          <DropdownMenuItem className={getMobileLinkClasses('/login')}>
+                            <UserIcon className="mr-2 h-4 w-4" />
+                            Sign In
+                          </DropdownMenuItem>
+                        </Link>
+                      )}
                       {isAuthenticated && (
                         <>
                           <Link href="/liked">
