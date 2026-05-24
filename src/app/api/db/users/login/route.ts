@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     }
 
     // Return user without password
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     const { password: _, ...safeUser } = user.toJSON();
     return Response.json(safeUser);
   } catch (error: unknown) {

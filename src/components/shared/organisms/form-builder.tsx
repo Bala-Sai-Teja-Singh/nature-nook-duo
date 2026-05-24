@@ -65,7 +65,7 @@ export function FormBuilder<T extends FieldValues>({
   submitAlignment = 'left'
 }: FormBuilderProps<T>) {
   const methods = useForm<T>({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     resolver: zodResolver(schema as any) as unknown as Resolver<T>,
     defaultValues
   });

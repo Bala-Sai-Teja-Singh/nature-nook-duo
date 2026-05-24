@@ -64,7 +64,7 @@ const orderSchema = new Schema(
     toJSON: {
       virtuals: true,
       versionKey: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       transform: (_doc: any, ret: any) => {
         ret.id = ret._id;
         delete ret._id;
@@ -74,7 +74,7 @@ const orderSchema = new Schema(
     toObject: {
       virtuals: true,
       versionKey: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       transform: (_doc: any, ret: any) => {
         ret.id = ret._id;
         delete ret._id;

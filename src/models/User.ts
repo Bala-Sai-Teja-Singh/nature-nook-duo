@@ -52,7 +52,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
     toJSON: {
       virtuals: true,
       versionKey: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       transform: (_doc: any, ret: any) => {
         ret.id = ret._id;
         delete ret._id;
@@ -62,7 +62,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
     toObject: {
       virtuals: true,
       versionKey: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       transform: (_doc: any, ret: any) => {
         ret.id = ret._id;
         delete ret._id;

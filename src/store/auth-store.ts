@@ -67,7 +67,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           const created = await DbClient.create<User>('users', newUser);
           // Remove password from the response for safe user
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+           
           const { password: _password, ...safeUser } = created as User & { password?: string };
           set({ user: safeUser as SafeUser, isAuthenticated: true, isLoading: false, viewMode: 'user' });
           // Load favorites

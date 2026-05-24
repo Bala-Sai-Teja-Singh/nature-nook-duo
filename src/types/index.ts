@@ -78,7 +78,7 @@ export interface Product {
   likes: number;
 
   // Generic metadata map
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   customMeta?: Record<string, any>;
 
   createdAt: string;

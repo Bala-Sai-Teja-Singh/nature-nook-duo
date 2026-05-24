@@ -10,14 +10,14 @@ export async function POST(req: Request) {
     }
 
     const { items, totalPrice, shippingCharge, id: orderId, userName, userEmail } = order;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const subtotal = items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
     
     const recipientEmail = IS_SANDBOX_MODE ? TEST_EMAIL : userEmail;
     const senderEmail = IS_SANDBOX_MODE ? 'ArachnidsArk <onboarding@resend.dev>' : 'ArachnidsArk <orders@arachnidsark.com>';
     const adminNotificationEmail = adminEmail || TEST_EMAIL;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const itemsHtml = items.map((item: any) => `
       <tr>
         <td style="padding: 10px; border-bottom: 1px solid #eee;">

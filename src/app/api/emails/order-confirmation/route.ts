@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     }
 
     const { items, totalPrice, shippingCharge, id: orderId, userName, userEmail } = order;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const subtotal = items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
     
     // Determine recipient based on Sandbox mode
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const adminNotificationEmail = adminEmail || TEST_EMAIL;
     const { upiIds, bankDetails, paymentInstructions } = paymentDetails;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const itemsHtml = items.map((item: any) => `
       <tr>
         <td style="padding: 10px; border-bottom: 1px solid #eee;">
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       </tr>
     `).join('');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const upiHtml = upiIds.map((upi: any) => `
       <div style="margin-bottom: 10px; padding: 10px; background: #f9f9f9; border-radius: 5px;">
         <strong>${upi.label}:</strong> <span style="font-family: monospace;">${upi.value}</span>

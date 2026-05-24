@@ -32,7 +32,7 @@ const systemSettingsSchema = new Schema(
     toJSON: {
       virtuals: true,
       versionKey: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       transform: (_doc: any, ret: any) => {
         delete ret._id;
         return ret;
@@ -41,7 +41,7 @@ const systemSettingsSchema = new Schema(
     toObject: {
       virtuals: true,
       versionKey: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       transform: (_doc: any, ret: any) => {
         delete ret._id;
         return ret;
