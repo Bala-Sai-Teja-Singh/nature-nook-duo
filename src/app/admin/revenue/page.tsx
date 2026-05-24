@@ -118,7 +118,7 @@ export default function AdminRevenuePage() {
 
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text('Nature Nook Duo Administration Dashboard', 14, 30);
+    doc.text('Nature\'s Nook Duo Administration Dashboard', 14, 30);
 
     doc.setFontSize(11);
     doc.setTextColor(0);

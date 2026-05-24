@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { User as UserIcon, Mail, Phone, Calendar, Shield, Save, MapPin, Plus, Trash2, Camera } from 'lucide-react';
+import { User as UserIcon, Mail, Phone, Calendar, Shield, Save, MapPin, Plus, Trash2, Camera, Eye, EyeOff, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/use-auth';
@@ -25,6 +25,15 @@ function ProfileContent() {
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  // Change password state
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPwd, setNewPwd] = useState('');
+  const [confirmPwd, setConfirmPwd] = useState('');
+  const [showCurrentPwd, setShowCurrentPwd] = useState(false);
+  const [showNewPwd, setShowNewPwd] = useState(false);
+  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
+  const [changingPwd, setChangingPwd] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -167,15 +176,15 @@ function ProfileContent() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Full Name</label>
-                    <Input required value={formData.name} onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))} className="h-12 rounded-xl bg-white/50" />
+                    <Input required value={formData.name} onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))} className="h-12 rounded-xl bg-background/50" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Phone Number</label>
-                    <Input type="tel" value={formData.phone} onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))} className="h-12 rounded-xl bg-white/50" placeholder="e.g. +1 234 567 8900" />
+                    <Input type="tel" value={formData.phone} onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))} className="h-12 rounded-xl bg-background/50" placeholder="e.g. +1 234 567 8900" />
                   </div>
                   <div className="space-y-2 sm:col-span-2">
                     <label className="text-sm font-medium text-foreground">Email Address</label>
-                    <Input type="email" required value={formData.email} onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))} className="h-12 rounded-xl bg-white/50" />
+                    <Input type="email" required value={formData.email} onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))} className="h-12 rounded-xl bg-background/50" />
                   </div>
                 </div>
                 <Button type="submit" disabled={isSaving || uploading} className="rounded-xl h-12 px-8 shadow-md">
@@ -196,11 +205,11 @@ function ProfileContent() {
 
               {isAddingAddress && (
                 <div className="bg-muted/30 p-6 rounded-2xl mb-6 space-y-4 border border-border/50">
-                  <Input placeholder="Street Address" value={newAddress.street} onChange={e => setNewAddress({...newAddress, street: e.target.value})} className="bg-white/50" />
+                  <Input placeholder="Street Address" value={newAddress.street} onChange={e => setNewAddress({...newAddress, street: e.target.value})} className="bg-background/50" />
                   <div className="grid grid-cols-3 gap-4">
-                    <Input placeholder="City" value={newAddress.city} onChange={e => setNewAddress({...newAddress, city: e.target.value})} className="bg-white/50" />
-                    <Input placeholder="State" value={newAddress.state} onChange={e => setNewAddress({...newAddress, state: e.target.value})} className="bg-white/50" />
-                    <Input placeholder="ZIP" value={newAddress.zip} onChange={e => setNewAddress({...newAddress, zip: e.target.value})} className="bg-white/50" />
+                    <Input placeholder="City" value={newAddress.city} onChange={e => setNewAddress({...newAddress, city: e.target.value})} className="bg-background/50" />
+                    <Input placeholder="State" value={newAddress.state} onChange={e => setNewAddress({...newAddress, state: e.target.value})} className="bg-background/50" />
+                    <Input placeholder="ZIP" value={newAddress.zip} onChange={e => setNewAddress({...newAddress, zip: e.target.value})} className="bg-background/50" />
                   </div>
                   <div className="flex justify-end gap-2 pt-2">
                     <Button variant="ghost" onClick={() => setIsAddingAddress(false)}>Cancel</Button>
@@ -214,7 +223,7 @@ function ProfileContent() {
                   <p className="text-muted-foreground text-sm italic">No addresses saved yet.</p>
                 ) : (
                   addresses.map((addr) => (
-                    <div key={addr.id} className="flex justify-between items-center p-4 border border-border/50 rounded-xl bg-white/30">
+                    <div key={addr.id} className="flex justify-between items-center p-4 border border-border/50 rounded-xl bg-background/30">
                       <div className="flex items-start gap-3">
                         <MapPin className="h-5 w-5 text-primary mt-0.5" />
                         <div>
@@ -229,6 +238,104 @@ function ProfileContent() {
                   ))
                 )}
               </div>
+            </div>
+
+            {/* Change Password */}
+            <div className="glass rounded-3xl p-8 border border-border/50 shadow-sm">
+              <h3 className="font-heading text-2xl font-bold mb-6 flex items-center gap-2">
+                <Lock className="h-5 w-5 text-primary" /> Change Password
+              </h3>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (newPwd !== confirmPwd) {
+                    toast({ title: 'Passwords do not match', variant: 'error' });
+                    return;
+                  }
+                  if (newPwd.length < 6) {
+                    toast({ title: 'Password must be at least 6 characters', variant: 'error' });
+                    return;
+                  }
+                  if (!user) return;
+                  setChangingPwd(true);
+                  try {
+                    const res = await fetch(`/api/db/users/${user.id}/password`, {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ currentPassword, newPassword: newPwd }),
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                      toast({ title: 'Password changed!', description: 'Your password has been updated.', variant: 'success' });
+                      setCurrentPassword('');
+                      setNewPwd('');
+                      setConfirmPwd('');
+                    } else {
+                      toast({ title: 'Error', description: data.error, variant: 'error' });
+                    }
+                  } catch {
+                    toast({ title: 'Error', description: 'Something went wrong.', variant: 'error' });
+                  } finally {
+                    setChangingPwd(false);
+                  }
+                }}
+                className="space-y-4"
+              >
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Current Password</label>
+                  <div className="relative">
+                    <Input
+                      required
+                      type={showCurrentPwd ? 'text' : 'password'}
+                      value={currentPassword}
+                      onChange={e => setCurrentPassword(e.target.value)}
+                      className="h-12 rounded-xl bg-background/50 pr-12"
+                      placeholder="Enter current password"
+                    />
+                    <button type="button" onClick={() => setShowCurrentPwd(!showCurrentPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1" tabIndex={-1}>
+                      {showCurrentPwd ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">New Password</label>
+                  <div className="relative">
+                    <Input
+                      required
+                      minLength={6}
+                      type={showNewPwd ? 'text' : 'password'}
+                      value={newPwd}
+                      onChange={e => setNewPwd(e.target.value)}
+                      className="h-12 rounded-xl bg-background/50 pr-12"
+                      placeholder="Min. 6 characters"
+                    />
+                    <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1" tabIndex={-1}>
+                      {showNewPwd ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Confirm New Password</label>
+                  <div className="relative">
+                    <Input
+                      required
+                      minLength={6}
+                      type={showConfirmPwd ? 'text' : 'password'}
+                      value={confirmPwd}
+                      onChange={e => setConfirmPwd(e.target.value)}
+                      className="h-12 rounded-xl bg-background/50 pr-12"
+                      placeholder="Re-enter new password"
+                    />
+                    <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1" tabIndex={-1}>
+                      {showConfirmPwd ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+                <Button type="submit" disabled={changingPwd} className="rounded-xl h-12 px-8 shadow-md">
+                  <Lock className="h-4 w-4 mr-2" />
+                  {changingPwd ? 'Changing...' : 'Change Password'}
+                </Button>
+              </form>
             </div>
             
           </div>

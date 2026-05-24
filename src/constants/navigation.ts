@@ -49,7 +49,7 @@ export const PAGE_TITLES: Record<string, string> = {
   '/dashboard/orders': 'My Orders',
   '/dashboard/profile': 'My Profile',
   '/liked': 'Favorite Items',
-  '/shop': 'Nature Nook Shop',
+  '/shop': 'Nature\'s Nook Duo Shop',
   '/care-guides': 'Expert Care Guides',
   '/cart': 'Your Shopping Cart',
   '/checkout': 'Secure Checkout',

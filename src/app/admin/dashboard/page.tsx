@@ -40,7 +40,7 @@ export default function DashboardOverviewPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
         <h1 className="font-heading text-3xl font-bold text-foreground">Dashboard Overview</h1>
-        <p className="text-muted-foreground mt-1">Welcome back, Admin. Here is what's happening at Nature Nook Duo today.</p>
+        <p className="text-muted-foreground mt-1">Welcome back, Admin. Here is what's happening at Nature's Nook Duo today.</p>
       </div>
 
       {isLoading ? (

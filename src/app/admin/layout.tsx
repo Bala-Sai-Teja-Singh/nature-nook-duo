@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Leaf className="h-6 w-6" />
             </div>
             <span className="font-heading text-2xl font-bold tracking-tight text-primary">
-              Nature Nook
+              Nature&apos;s Nook Duo
             </span>
           </div>
 

@@ -31,7 +31,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Nature Nook Duo | Premium Pet Store",
+  title: "Nature's Nook Duo | Premium Pet Store",
   description: "Find Your Perfect Companion. Your premier destination for premium pets, supplies, and professional care guides.",
   keywords: ["pets", "pet store", "dogs", "cats", "birds", "exotic pets", "pet care"],
   icons: {

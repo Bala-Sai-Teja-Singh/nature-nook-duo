@@ -52,7 +52,7 @@ export function Navbar() {
                       <Menu className="h-6 w-6" />
                     </button>
                     <span className="font-heading text-2xl font-bold tracking-tight text-primary hidden sm:inline-block">
-                      Nature Nook
+                      Nature's Nook Duo
                     </span>
                   </div>
                   <Link href="/" className="hidden lg:flex items-center gap-2 group">
@@ -60,7 +60,7 @@ export function Navbar() {
                       <Leaf className="h-6 w-6 animate-pulse-glow" />
                     </div>
                     <span className="font-heading text-2xl font-bold tracking-tight text-primary">
-                      Nature Nook
+                      Nature's Nook Duo
                     </span>
                   </Link>
                 </>
@@ -70,7 +70,7 @@ export function Navbar() {
                     <Leaf className="h-6 w-6 animate-pulse-glow" />
                   </div>
                   <span className="font-heading text-2xl font-bold tracking-tight text-primary hidden sm:inline-block">
-                    Nature Nook
+                    Nature's Nook Duo
                   </span>
                 </Link>
               )}

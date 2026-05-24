@@ -85,7 +85,7 @@ function OrdersContent() {
               
               return (
                 <div key={order.id} className="glass rounded-3xl border border-border/50 overflow-hidden shadow-sm transition-all hover:shadow-md">
-                  <div className="bg-white/40 p-4 sm:p-6 border-b border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="bg-muted/30 p-4 sm:p-6 border-b border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-3 mb-1">
                         <span className="font-bold text-lg">Order #{order.id.substring(0, 8)}</span>
@@ -125,7 +125,7 @@ function OrdersContent() {
                     </div>
                   </div>
                   
-                  <div className="bg-white/30 p-4 border-t border-border/50 flex justify-between items-center">
+                  <div className="bg-muted/40 p-4 border-t border-border/50 flex justify-between items-center">
                     <p className="text-sm text-muted-foreground flex items-center">
                       <Truck className="h-4 w-4 mr-2" />
                       Shipped to: {order.deliveryAddress ? order.deliveryAddress.split(',')[1]?.trim() || order.deliveryAddress : 'Address provided'}

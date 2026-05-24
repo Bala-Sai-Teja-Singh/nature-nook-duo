@@ -23,7 +23,7 @@ export function Footer({ forceShow = false }: { forceShow?: boolean }) {
                 <Leaf className="h-6 w-6 text-accent" />
               </div>
               <span className="font-heading text-2xl font-bold tracking-tight text-white">
-                Nature Nook
+                Nature's Nook Duo
               </span>
             </div>
             <p className="text-white/80 text-sm leading-relaxed max-w-xs">
@@ -69,7 +69,7 @@ export function Footer({ forceShow = false }: { forceShow?: boolean }) {
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/60 text-sm text-center md:text-left">
-            &copy; {new Date().getFullYear()} Nature Nook Duo. All rights reserved.
+            &copy; {new Date().getFullYear()} Nature's Nook Duo. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             <span className="text-white/60 text-sm">Built with passion for nature.</span>

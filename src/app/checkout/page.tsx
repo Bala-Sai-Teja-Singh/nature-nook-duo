@@ -130,7 +130,7 @@ export default function CheckoutPage() {
           </div>
           <h1 className="font-heading text-4xl font-bold mb-4 text-foreground">Order Successful!</h1>
           <p className="text-lg text-muted-foreground mb-8">
-            Thank you for choosing Nature Nook Duo. Your order <span className="font-bold text-foreground">#{orderId.substring(0, 8)}</span> has been securely placed. We will contact you shortly to coordinate safe transport.
+            Thank you for choosing Nature&apos;s Nook Duo. Your order <span className="font-bold text-foreground">#{orderId.substring(0, 8)}</span> has been securely placed. We will contact you shortly to coordinate safe transport.
           </p>
           <div className="flex gap-4">
             {isAuthenticated && (
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
                       <div 
                         key={addr.id}
                         onClick={() => setFormData(prev => ({ ...prev, address: addr.street, city: addr.city, state: addr.state, zip: addr.zip }))}
-                        className="cursor-pointer border border-border/50 rounded-xl p-4 hover:border-primary/50 hover:bg-primary/5 transition-all bg-white/30 active:scale-[0.98]"
+                        className="cursor-pointer border border-border/50 rounded-xl p-4 hover:border-primary/50 hover:bg-primary/5 transition-all bg-background/30 active:scale-[0.98]"
                       >
                         <p className="font-medium text-sm">{addr.street}</p>
                         <p className="text-xs text-muted-foreground mt-1">{addr.city}, {addr.state} {addr.zip}</p>
@@ -186,32 +186,32 @@ export default function CheckoutPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Full Name</label>
-                  <Input required name="name" value={formData.name} onChange={handleInputChange} className="h-12 rounded-xl bg-white/50" />
+                  <Input required name="name" value={formData.name} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Email Address</label>
-                  <Input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="h-12 rounded-xl bg-white/50" />
+                  <Input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-sm font-medium text-foreground">Phone Number (Required for live delivery)</label>
-                  <Input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="h-12 rounded-xl bg-white/50" />
+                  <Input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-sm font-medium text-foreground">Street Address</label>
-                  <Input required name="address" value={formData.address} onChange={handleInputChange} className="h-12 rounded-xl bg-white/50" />
+                  <Input required name="address" value={formData.address} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">City</label>
-                  <Input required name="city" value={formData.city} onChange={handleInputChange} className="h-12 rounded-xl bg-white/50" />
+                  <Input required name="city" value={formData.city} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">State</label>
-                    <Input required name="state" value={formData.state} onChange={handleInputChange} className="h-12 rounded-xl bg-white/50" />
+                    <Input required name="state" value={formData.state} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">ZIP Code</label>
-                    <Input required name="zip" value={formData.zip} onChange={handleInputChange} className="h-12 rounded-xl bg-white/50" />
+                    <Input required name="zip" value={formData.zip} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                   </div>
                 </div>
                 <div className="space-y-2 md:col-span-2 mt-2">
@@ -221,7 +221,7 @@ export default function CheckoutPage() {
                     value={formData.message} 
                     onChange={handleInputChange} 
                     rows={3}
-                    className="flex w-full rounded-xl border border-input bg-white/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex w-full rounded-xl border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
               </div>

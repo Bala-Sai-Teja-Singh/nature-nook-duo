@@ -45,7 +45,7 @@ export default function AdminSettingsPage() {
           upiIds: [
             { id: 'upi-1', label: 'Primary UPI', value: 'payments@arachnidsark', isDefault: true },
           ],
-          bankDetails: 'Bank Name: HDFC Bank\nAccount Name: Nature Nook Duo Pvt Ltd\nAccount Number: 50200001234567\nIFSC Code: HDFC0001234',
+          bankDetails: 'Bank Name: HDFC Bank\nAccount Name: Nature\'s Nook Duo Pvt Ltd\nAccount Number: 50200001234567\nIFSC Code: HDFC0001234',
           paymentInstructions: 'Please ensure you add your order request ID in the payment remarks.',
           emailNotifications: {
             orderConfirmations: true,
