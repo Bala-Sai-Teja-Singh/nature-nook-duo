@@ -57,7 +57,7 @@ export default async function HomePage() {
                 <Link href="/shop" className={buttonVariants({ size: "lg", className: "rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 h-14 text-base shadow-lg shadow-primary/25 transition-all hover:scale-105" })}>
                   Shop Now <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
-                <Link href="/care-guides" className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-full border-primary/20 bg-white/50 backdrop-blur-sm text-primary hover:bg-primary/10 hover:text-primary font-medium px-8 h-14 text-base transition-all" })}>
+                <Link href="/care-guides" className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-full border-primary/20 bg-background/50 backdrop-blur-sm text-primary hover:bg-primary/10 hover:text-primary font-medium px-8 h-14 text-base transition-all" })}>
                   Read Care Guides
                 </Link>
               </div>
@@ -75,7 +75,7 @@ export default async function HomePage() {
       </section>
 
       {/* Trust Badges */}
-      <section className="border-y border-border/50 bg-white/50 backdrop-blur-sm py-8">
+      <section className="border-y border-border/50 bg-background/50 backdrop-blur-sm py-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="flex flex-col items-center text-center space-y-3">
@@ -138,7 +138,7 @@ export default async function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-white/50 rounded-2xl border border-border/50">
+            <div className="text-center py-20 bg-background/50 rounded-2xl border border-border/50">
               <p className="text-muted-foreground text-lg">No featured pets available at the moment. Please check back soon!</p>
             </div>
           )}
