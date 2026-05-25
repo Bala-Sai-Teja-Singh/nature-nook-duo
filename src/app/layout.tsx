@@ -63,7 +63,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${quicksand.variable} ${lora.variable} h-full antialiased`}
+      className={`${quicksand.variable} ${lora.variable} antialiased`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
@@ -78,7 +78,7 @@ export default async function RootLayout({
           <TooltipProvider>
             <ModuleProvider initialModules={initialModules}>
               <AppProvider>
-                <div className="flex min-h-screen flex-col relative overflow-hidden bg-nature-pattern">
+                <div className="flex min-h-[100dvh] flex-col relative overflow-x-hidden bg-nature-pattern">
                   <Navbar />
                   <main className="flex-1 flex flex-col z-10 w-full relative">
                     {children}
