@@ -130,7 +130,7 @@ function ProfileContent() {
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-4xl">
-        <h1 className="font-heading text-4xl font-bold mb-8 text-foreground animate-hero-text">My Profile</h1>
+        <h1 className="font-heading text-4xl sm:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1 animate-hero-text">My Profile</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           

@@ -108,26 +108,28 @@ export default async function ProductsPage(props: {
 
   return (
     <div className="flex flex-col min-h-screen bg-background py-12">
-      <div className="container mx-auto px-4 max-w-7xl">
+      <div className="container mx-auto px-4 max-w-7xl relative z-10">
         <Reveal animation="fade-down" className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-          <h1 className="font-heading text-4xl font-bold text-foreground">Shop Companions</h1>
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent">Shop Companions</h1>
         </Reveal>
         <div className="flex flex-col gap-8">
           
           <div className="glass rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
             
-            {/* Category Tabs with dynamic scroll indicator */}
-            <ScrollFadeWrapper className="w-full md:w-auto" scrollClassName="flex items-center gap-2 pb-1 pr-8 md:pr-0">
-              <Link href={`/shop${q ? `?q=${q}` : ''}`} className={`px-5 py-2.5 h-10 rounded-full font-heading text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 ${!categoryFilter ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}>
-                All
+            <ScrollFadeWrapper className="w-full md:w-auto" scrollClassName="flex items-center gap-3 pb-2 pr-8 md:pr-0">
+              <Link href={`/shop${q ? `?q=${q}` : ''}`} className={`relative px-5 py-2.5 h-10 rounded-full font-heading text-[11px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 overflow-hidden group ${!categoryFilter ? 'text-primary-foreground shadow-md' : 'bg-background text-muted-foreground hover:text-foreground border border-border/50'}`}>
+                {/* Active sliding background trick */}
+                <div className={`absolute inset-0 bg-primary transition-opacity duration-300 ${!categoryFilter ? 'opacity-100' : 'opacity-0 group-hover:opacity-10'}`} />
+                <span className="relative z-10">All</span>
               </Link>
               {categories.map(cat => (
                 <Link 
                   key={cat.id} 
                   href={`/shop?category=${cat.name}${q ? `&q=${q}` : ''}`}
-                  className={`px-5 py-2.5 h-10 rounded-full font-heading text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 ${categoryFilter === cat.name ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
+                  className={`relative px-5 py-2.5 h-10 rounded-full font-heading text-[11px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 overflow-hidden group ${categoryFilter === cat.name ? 'text-primary-foreground shadow-md' : 'bg-background text-muted-foreground hover:text-foreground border border-border/50'}`}
                 >
-                  {cat.name}
+                  <div className={`absolute inset-0 bg-primary transition-opacity duration-300 ${categoryFilter === cat.name ? 'opacity-100' : 'opacity-0 group-hover:opacity-10'}`} />
+                  <span className="relative z-10">{cat.name}</span>
                 </Link>
               ))}
             </ScrollFadeWrapper>

@@ -38,7 +38,7 @@ export function SectionHeader({
     <div className={cn("flex flex-col sm:flex-row sm:items-center justify-between gap-6", title ? "mb-8" : "mb-4", className)}>
       {(title || description) && (
         <div className="space-y-1">
-          {title && <h1 className="text-3xl font-bold tracking-tight text-foreground">{title}</h1>}
+          {title && <h1 className="font-heading text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1">{title}</h1>}
           {description && (
             <p className="text-muted-foreground text-sm leading-relaxed">
               {description}

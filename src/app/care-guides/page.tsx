@@ -47,7 +47,7 @@ export default function CareGuidesPage() {
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-          <h1 className="font-heading text-4xl font-bold text-foreground">Care Guides</h1>
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1">Care Guides</h1>
         </div>
 
       <div className="flex flex-col md:flex-row gap-4 mb-8">

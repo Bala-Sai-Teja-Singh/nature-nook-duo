@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Heart, ShieldCheck, Leaf, Star, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShoppingCart, Heart, ShieldCheck, Leaf, Star, Check, ChevronLeft, ChevronRight, Thermometer, Droplets, Utensils, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/use-cart';
@@ -82,13 +82,19 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
         
         {/* Left: Image Gallery */}
         <div className="space-y-4">
-          <div className="relative aspect-square w-full rounded-3xl overflow-hidden glass shadow-xl border border-border/50">
-            {product.images?.[selectedImage] ? (
-              <img
-                src={getProxiedImageUrl(product.images[selectedImage])}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+          <div className="relative aspect-square w-full rounded-3xl overflow-hidden glass shadow-xl border border-border/50 bg-muted">
+            {product.images && product.images.length > 0 ? (
+              product.images.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={getProxiedImageUrl(img)}
+                  alt={`${product.name} ${idx + 1}`}
+                  className={cn(
+                    "absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out",
+                    selectedImage === idx ? "opacity-100 z-10" : "opacity-0 z-0"
+                  )}
+                />
+              ))
             ) : (
               <div className="absolute inset-0 flex items-center justify-center bg-muted">
                 <Leaf className="h-20 w-20 text-muted-foreground/30" />
@@ -159,12 +165,12 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
             {product.breed}
           </p>
 
-          <div className="flex items-end gap-3 mb-8">
-            <span className="text-4xl font-bold text-foreground">
+          <div className="flex items-end gap-3 mb-8 h-12">
+            <span key={selectedSize?.size || 'base'} className="text-4xl font-bold text-foreground animate-in fade-in slide-in-from-bottom-2 duration-300">
               ₹{selectedSize ? selectedSize.price.toFixed(2) : '0.00'}
             </span>
             {selectedSize && selectedSize.stock < 5 && selectedSize.stock > 0 && (
-              <span className="text-sm text-destructive font-medium mb-1.5">
+              <span className="text-sm text-amber-600 dark:text-amber-400 font-medium mb-1.5 animate-pulse">
                 Only {selectedSize.stock} left in stock!
               </span>
             )}
@@ -180,22 +186,26 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
           </div>
 
           {/* Quick Specs */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl glass mb-8">
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Care Level</span>
-              <span className="font-medium text-foreground capitalize">{product.careLevel}</span>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+            <div className="flex flex-col gap-1.5 p-4 rounded-2xl glass border border-border/50 items-center text-center">
+              <Award className="h-5 w-5 text-primary opacity-80" />
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Care Level</span>
+              <span className="font-medium text-foreground capitalize text-sm">{product.careLevel}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Temp</span>
-              <span className="font-medium text-foreground">{product.temperature}</span>
+            <div className="flex flex-col gap-1.5 p-4 rounded-2xl glass border border-border/50 items-center text-center">
+              <Thermometer className="h-5 w-5 text-amber-500 opacity-80" />
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Temp</span>
+              <span className="font-medium text-foreground text-sm">{product.temperature}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Humidity</span>
-              <span className="font-medium text-foreground">{product.humidity}</span>
+            <div className="flex flex-col gap-1.5 p-4 rounded-2xl glass border border-border/50 items-center text-center">
+              <Droplets className="h-5 w-5 text-blue-500 opacity-80" />
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Humidity</span>
+              <span className="font-medium text-foreground text-sm">{product.humidity}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Diet</span>
-              <span className="font-medium text-foreground truncate" title={product.feeding}>{product.feeding}</span>
+            <div className="flex flex-col gap-1.5 p-4 rounded-2xl glass border border-border/50 items-center text-center">
+              <Utensils className="h-5 w-5 text-green-500 opacity-80" />
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Diet</span>
+              <span className="font-medium text-foreground truncate w-full text-sm" title={product.feeding}>{product.feeding}</span>
             </div>
           </div>
 
@@ -228,9 +238,9 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
             </div>
           )}
 
-          {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-auto pt-8 border-t border-border">
-            <div className="flex items-center justify-between border-2 border-border/50 rounded-full bg-background px-4 py-1 sm:w-32 h-14">
+          {/* Sticky Mobile / Desktop Actions */}
+          <div className="fixed bottom-0 left-0 w-full p-4 bg-background/80 backdrop-blur-xl border-t border-border z-40 lg:static lg:bg-transparent lg:backdrop-blur-none lg:border-t lg:border-border lg:p-0 lg:pt-8 flex flex-row gap-4 mt-auto">
+            <div className="hidden sm:flex items-center justify-between border-2 border-border/50 rounded-full bg-background px-4 py-1 w-32 h-14 shrink-0">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="text-muted-foreground hover:text-foreground text-xl font-medium w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
@@ -246,10 +256,10 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
               onClick={handleAddToCart}
               disabled={!selectedSize || selectedSize.stock === 0}
               size="lg" 
-              className="flex-1 h-14 rounded-full bg-primary hover:bg-primary/90 text-white text-base shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5"
+              className="flex-1 h-14 rounded-full bg-primary hover:bg-primary/90 text-white text-base shadow-lg shadow-primary/25 transition-all hover:scale-105"
             >
               <ShoppingCart className="mr-2 h-5 w-5" />
-              {selectedSize && selectedSize.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+              {selectedSize && selectedSize.stock === 0 ? 'Out of Stock' : `Add to Cart - ₹${selectedSize ? (selectedSize.price * quantity).toFixed(2) : '0.00'}`}
             </Button>
             
             <Button 
@@ -263,6 +273,9 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
           </div>
         </div>
       </div>
+      
+      {/* Footer spacer for mobile sticky cart */}
+      <div className="h-20 lg:hidden" />
       
       {/* Reviews Section */}
       <div className="pt-16 border-t border-border/50">

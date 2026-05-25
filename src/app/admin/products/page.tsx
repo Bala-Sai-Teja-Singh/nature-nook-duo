@@ -213,7 +213,7 @@ export default function AdminProductsPage() {
     <Reveal animation="fade-up" className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-heading text-3xl font-bold text-foreground">Product Management</h1>
+          <h1 className="font-heading text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1">Product Management</h1>
           <p className="text-muted-foreground mt-1">Manage your pet catalog, stock, and descriptions.</p>
         </div>
         <Button className="rounded-xl shadow-md h-12 px-6" onClick={() => {

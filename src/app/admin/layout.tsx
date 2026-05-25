@@ -17,7 +17,9 @@ import {
   DollarSign,
   Ticket,
   BookOpen,
-  Store
+  Store,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { AuthGuard } from '@/components/auth-guard';
 import { useAuth } from '@/hooks/use-auth';
@@ -28,6 +30,7 @@ import { cn } from '@/lib/utils';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { adminSidebarOpen: sidebarOpen, setAdminSidebarOpen: setSidebarOpen } = useUiStore();
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
   const { logout } = useAuth();
 
@@ -59,19 +62,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Sidebar */}
         <aside className={cn(
-          "fixed inset-y-0 left-0 z-[100] w-64 bg-background border-r border-border transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl lg:static lg:translate-x-0 lg:z-0 lg:shadow-none lg:h-full",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 z-[100] bg-background/95 backdrop-blur-xl border-r border-border transform transition-all duration-300 ease-in-out flex flex-col shadow-2xl lg:static lg:translate-x-0 lg:z-0 lg:shadow-none lg:h-full group",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
+          isCollapsed ? "lg:w-20 w-64" : "w-64"
         )}>
-          <div className="flex lg:hidden h-20 items-center gap-2 px-6 border-b border-border/50 shrink-0">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Leaf className="h-6 w-6" />
-            </div>
-            <span className="font-heading text-2xl font-bold tracking-tight text-primary">
-              Nature&apos;s Nook Duo
-            </span>
-          </div>
+          {/* Collapse Toggle (Desktop Only) */}
+          <button 
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="hidden lg:flex absolute -right-3 top-6 h-6 w-6 bg-background border border-border rounded-full items-center justify-center text-muted-foreground hover:text-primary hover:border-primary z-50 transition-colors shadow-sm"
+          >
+            {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+          </button>
 
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <nav className="flex-1 px-4 py-6 lg:pt-12 space-y-2 overflow-y-auto">
             {navItems.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
               return (
@@ -79,16 +82,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium",
+                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium relative overflow-hidden group/item",
                     isActive 
-                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
-                      : "text-muted-foreground hover:bg-primary/10 hover:text-primary",
-                    item.name === 'View Storefront' ? "lg:hidden" : ""
+                      ? "bg-primary/10 text-primary" 
+                      : "text-muted-foreground hover:bg-primary/5 hover:text-primary",
+                    item.name === 'View Storefront' ? "lg:hidden" : "",
+                    isCollapsed ? "lg:justify-center lg:px-0" : ""
                   )}
                   onClick={() => setSidebarOpen(false)}
+                  title={isCollapsed ? item.name : undefined}
                 >
-                  {item.icon}
-                  {item.name}
+                  {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(var(--primary),0.5)]" />}
+                  <div className={cn("shrink-0", isActive ? "text-primary" : "text-muted-foreground group-hover/item:text-primary transition-colors")}>
+                    {item.icon}
+                  </div>
+                  <span className={cn("whitespace-nowrap", isCollapsed ? "lg:hidden" : "")}>{item.name}</span>
                 </Link>
               );
             })}
@@ -97,11 +105,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="p-4 border-t border-border/50">
             <Button 
               variant="ghost" 
-              className="w-full flex items-center justify-start gap-3 px-4 py-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl"
-              onClick={() => logout()}
+              className={cn("flex items-center gap-3 py-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all", isCollapsed ? "lg:justify-center lg:w-12 lg:h-12 lg:p-0 mx-auto justify-start w-full px-4" : "justify-start w-full px-4")}
+              onClick={logout}
+              title={isCollapsed ? "Log Out" : undefined}
             >
-              <LogOut className="h-5 w-5" />
-              Sign Out
+              <LogOut className="h-5 w-5 shrink-0" />
+              <span className={cn(isCollapsed ? "lg:hidden" : "")}>Log Out</span>
             </Button>
           </div>
         </aside>
@@ -109,6 +118,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           
+
           {/* Page Content */}
           <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-muted/30">
             {children}

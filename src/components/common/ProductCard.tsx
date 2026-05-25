@@ -119,47 +119,55 @@ export function ProductCard({ product }: ProductCardProps) {
                 key={idx}
                 src={getProxiedImageUrl(img)}
                 alt={`${product.name} ${idx + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out group-hover:scale-105 ${
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out group-hover:scale-108 ${
                   idx === currentImgIdx ? 'opacity-100 z-10' : 'opacity-0 z-0'
                 }`}
                 style={{ transitionProperty: 'opacity, transform' }}
               />
             ))
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-muted">
               No Image
             </div>
           )}
           
+          {/* Subtle bottom gradient for better text readability and depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 z-10 opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+          
           {/* Top Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          <div className="absolute top-3 left-3 flex flex-col gap-2 z-20">
             {product.mainCategory && (
               <Badge variant="secondary" className="bg-white/90 text-primary hover:bg-white backdrop-blur-sm shadow-sm font-medium">
                 {typeof product.mainCategory === 'string' ? product.mainCategory : (product.mainCategory as any).name}
               </Badge>
             )}
             {product.featured && (
-              <Badge className="bg-accent/90 text-white hover:bg-accent backdrop-blur-sm shadow-sm font-medium">
+              <Badge className="bg-accent/90 text-white hover:bg-accent backdrop-blur-md shadow-sm font-medium border-none uppercase tracking-widest text-[9px]">
                 Featured
               </Badge>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 transform translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+          <div className="absolute top-3 right-3 flex flex-col gap-2 z-20 md:opacity-0 md:transform md:translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
             <Button 
               size="icon" 
               variant="secondary" 
               onClick={handleLike}
-              className={`h-9 w-9 rounded-full bg-white/90 shadow-sm backdrop-blur-sm hover:bg-white transition-colors ${liked ? 'text-red-500' : 'hover:text-red-500 text-foreground/70'}`}
+              className={`h-9 w-9 rounded-full bg-white/90 shadow-md backdrop-blur-sm hover:bg-white transition-colors ${liked ? 'text-red-500' : 'hover:text-red-500 text-foreground/70'}`}
             >
               <Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
             </Button>
           </div>
+          
+          {/* Quick Peek (Hover only) */}
+          <div className="absolute bottom-0 left-0 w-full p-4 z-20 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t from-background via-background/90 to-transparent pt-16 pb-4">
+            <p className="text-xs text-foreground font-medium line-clamp-2 italic drop-shadow-sm">"{product.description || 'Discover a new companion today.'}"</p>
+          </div>
         </div>
 
         {/* Content Container */}
-        <div className="flex flex-col flex-grow p-5">
+        <div className="flex flex-col flex-grow p-5 relative z-10 bg-card">
           <div className="flex-grow space-y-1">
             <h3 className="font-heading text-xl font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
               {product.name}
@@ -174,8 +182,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
           <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
             <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Starting at</span>
-              <span className="text-lg font-bold text-foreground">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Starting from</span>
+              <span className="text-lg font-bold text-primary">
                 ₹{startingPrice.toFixed(2)}
               </span>
             </div>
@@ -183,7 +191,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <Button 
               onClick={handleAddToCart}
               size="sm" 
-              className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors duration-300 px-4 group/btn"
+              className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors duration-300 px-4 group/btn shadow-none"
             >
               <ShoppingCart className="h-4 w-4 mr-2 transition-transform group-hover/btn:scale-110" />
               Add

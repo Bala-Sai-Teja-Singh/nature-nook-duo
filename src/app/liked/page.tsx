@@ -106,7 +106,7 @@ export default function FavoritesPage() {
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-          <h1 className="font-heading text-4xl font-bold text-foreground">My Favorites</h1>
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1">My Favorites</h1>
           <div className="relative w-full sm:w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input 

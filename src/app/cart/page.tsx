@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Truck, Check } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useCart } from '@/hooks/use-cart';
 import { EmptyState } from '@/components/shared/molecules/empty-state';
@@ -24,7 +24,29 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-6xl">
-        <h1 className="font-heading text-4xl font-bold mb-8 text-foreground animate-hero-text">Your Cart</h1>
+        {/* Step Progress Bar */}
+        <div className="mb-10 w-full max-w-3xl mx-auto flex items-center justify-between relative">
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-border/50 -z-10 rounded-full" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/3 h-1 bg-primary -z-10 rounded-full" />
+          
+          <div className="flex flex-col items-center gap-2 bg-background px-2">
+            <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold shadow-md shadow-primary/20">1</div>
+            <span className="text-xs font-bold uppercase tracking-widest text-primary">Cart</span>
+          </div>
+          <div className="flex flex-col items-center gap-2 bg-background px-2">
+            <div className="w-10 h-10 rounded-full bg-muted text-muted-foreground flex items-center justify-center font-bold">2</div>
+            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Checkout</span>
+          </div>
+          <div className="flex flex-col items-center gap-2 bg-background px-2">
+            <div className="w-10 h-10 rounded-full bg-muted text-muted-foreground flex items-center justify-center font-bold">3</div>
+            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Done</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4 mb-8">
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent animate-hero-text pb-1">Your Cart</h1>
+          <span className="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-sm">{items.length} items</span>
+        </div>
         
         {items.length === 0 ? (
           <EmptyState
@@ -74,15 +96,15 @@ export default function CartPage() {
                       </div>
                       
                       <div className="mt-auto flex items-center justify-between pt-4">
-                        <div className="flex items-center border border-border/60 rounded-full bg-background px-3 py-1 h-10">
+                        <div className="flex items-center border-2 border-border/60 rounded-full bg-background px-1 h-10 w-28 shadow-sm">
                           <button 
                             onClick={() => updateQuantity(item.id, item.quantity - 1, item.metadata?.size)}
-                            className="text-muted-foreground hover:text-foreground font-medium w-6 h-6 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+                            className="text-muted-foreground hover:text-foreground hover:bg-muted font-medium w-8 h-8 flex items-center justify-center rounded-full transition-colors"
                           >-</button>
-                          <span className="font-medium text-sm w-8 text-center">{item.quantity}</span>
+                          <span className="font-bold text-sm flex-1 text-center">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.id, item.quantity + 1, item.metadata?.size)}
-                            className="text-muted-foreground hover:text-foreground font-medium w-6 h-6 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+                            className="text-muted-foreground hover:text-foreground hover:bg-muted font-medium w-8 h-8 flex items-center justify-center rounded-full transition-colors"
                           >+</button>
                         </div>
                         <Button 

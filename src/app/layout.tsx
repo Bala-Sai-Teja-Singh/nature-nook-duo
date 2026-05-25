@@ -78,7 +78,7 @@ export default async function RootLayout({
           <TooltipProvider>
             <ModuleProvider initialModules={initialModules}>
               <AppProvider>
-                <div className="flex min-h-[100dvh] flex-col relative overflow-x-hidden bg-nature-pattern">
+                <div className="flex min-h-dvh flex-col relative overflow-x-hidden bg-nature-pattern">
                   <Navbar />
                   <main className="flex-1 flex flex-col z-10 w-full relative">
                     {children}

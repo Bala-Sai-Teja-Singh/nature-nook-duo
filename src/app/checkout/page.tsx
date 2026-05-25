@@ -153,7 +153,7 @@ export default function CheckoutPage() {
           <div className="h-24 w-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 animate-success-burst">
             <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" />
           </div>
-          <h1 className="font-heading text-4xl font-bold mb-4 text-foreground">Order Placed!</h1>
+          <h1 className="font-heading text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700 pb-1">Order Placed!</h1>
           <p className="text-lg text-muted-foreground mb-4">
             Thank you for choosing Nature&apos;s Nook Duo. Your order <span className="font-bold text-foreground">#{orderId.substring(0, 8)}</span> has been received.
           </p>
@@ -187,7 +187,7 @@ export default function CheckoutPage() {
           </Link>
         </div>
         
-        <h1 className="font-heading text-4xl font-bold mb-8 text-foreground">Secure Checkout</h1>
+        <h1 className="font-heading text-4xl sm:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1">Secure Checkout</h1>
         
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-5 gap-10">
           

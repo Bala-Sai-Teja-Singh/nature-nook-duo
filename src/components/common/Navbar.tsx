@@ -28,6 +28,13 @@ export function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { unreadCount, loadNotifications } = useNotificationStore();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -41,7 +48,12 @@ export function Navbar() {
 
   const getLinkClasses = (path: string) => {
     const isActive = path === '/' ? pathname === '/' : (pathname === path || pathname.startsWith(`${path}/`));
-    return `text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`;
+    return `relative text-sm font-medium transition-colors flex items-center gap-1.5 py-1 ${isActive ? 'text-primary' : 'text-foreground/80 hover:text-primary'} group`;
+  };
+
+  const getLinkUnderline = (path: string) => {
+    const isActive = path === '/' ? pathname === '/' : (pathname === path || pathname.startsWith(`${path}/`));
+    return <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />;
   };
 
   const getMobileLinkClasses = (path: string) => {
@@ -51,9 +63,9 @@ export function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background">
+      <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-background/90 backdrop-blur-xl border-b border-border shadow-sm' : 'bg-background/80 backdrop-blur-lg border-b border-border/40'}`}>
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-16 md:h-20 items-center justify-between transition-all duration-300">
             {/* Logo Section */}
             <div className="flex items-center gap-2">
               {pathname.startsWith('/admin') ? (
@@ -100,17 +112,21 @@ export function Navbar() {
                 <>
                   <Link href="/shop" className={getLinkClasses('/shop')}>
                     <ShoppingBag className="h-4 w-4" /> Shop
+                    {getLinkUnderline('/shop')}
                   </Link>
                   <Link href="/care-guides" className={getLinkClasses('/care-guides')}>
                     <BookOpen className="h-4 w-4" /> Care Guides
+                    {getLinkUnderline('/care-guides')}
                   </Link>
                   {isAuthenticated && (
                     <>
                       <Link href="/liked" className={getLinkClasses('/liked')}>
                         <Heart className="h-4 w-4" /> Favorites
+                        {getLinkUnderline('/liked')}
                       </Link>
                       <Link href="/dashboard/orders" className={getLinkClasses('/dashboard/orders')}>
                         <Package className="h-4 w-4" /> My Orders
+                        {getLinkUnderline('/dashboard/orders')}
                       </Link>
                     </>
                   )}
@@ -270,7 +286,7 @@ export function Navbar() {
           </div>
         </div>
       </header>
-      <div className="h-20 w-full shrink-0" />
+      <div className="h-16 md:h-20 w-full shrink-0" />
 
       {/* Slide-over Cart Modal */}
       {isCartOpen && (

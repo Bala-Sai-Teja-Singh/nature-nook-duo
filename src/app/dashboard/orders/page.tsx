@@ -60,7 +60,7 @@ function OrdersContent() {
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-5xl">
         <Reveal animation="fade-down" className="flex items-center justify-between mb-8">
-          <h1 className="font-heading text-4xl font-bold text-foreground">My Orders</h1>
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1">My Orders</h1>
           <Link href="/shop" className={buttonVariants({ variant: "outline", className: "rounded-full" })}>
             Continue Shopping
           </Link>

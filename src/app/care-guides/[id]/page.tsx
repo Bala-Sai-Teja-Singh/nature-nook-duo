@@ -56,7 +56,7 @@ export default function CareGuideDetailPage({ params }: { params: Promise<{ id: 
               {guide.category}
             </Badge>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-accent pb-1">
             {guide.title}
           </h1>
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground border-y border-border/50 py-4">
