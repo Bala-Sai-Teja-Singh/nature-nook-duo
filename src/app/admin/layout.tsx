@@ -10,7 +10,6 @@ import {
   Users, 
   Settings, 
   LogOut, 
-  Menu,
   Leaf,
   FolderTree,
   MessageSquare,
@@ -27,6 +26,7 @@ import { useUiStore } from '@/store/ui-store';
 import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/common/Footer';
 import { cn } from '@/lib/utils';
+import { MobileSidebar, type MobileSidebarSection } from '@/components/common/MobileSidebar';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { adminSidebarOpen: sidebarOpen, setAdminSidebarOpen: setSidebarOpen } = useUiStore();
@@ -35,41 +35,65 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { logout } = useAuth();
 
   const navItems = [
-    { name: 'Overview', href: '/admin/dashboard', icon: <LayoutDashboard className="h-5 w-5" /> },
-    { name: 'Categories', href: '/admin/categories', icon: <FolderTree className="h-5 w-5" /> },
-    { name: 'Products', href: '/admin/products', icon: <PackageSearch className="h-5 w-5" /> },
-    { name: 'Reviews', href: '/admin/reviews', icon: <MessageSquare className="h-5 w-5" /> },
-    { name: 'Orders', href: '/admin/orders', icon: <ShoppingCart className="h-5 w-5" /> },
-    { name: 'Revenue', href: '/admin/revenue', icon: <DollarSign className="h-5 w-5" /> },
-    { name: 'Coupons', href: '/admin/coupons', icon: <Ticket className="h-5 w-5" /> },
-    { name: 'Care Guides', href: '/admin/care-guides', icon: <BookOpen className="h-5 w-5" /> },
-    { name: 'Users', href: '/admin/users', icon: <Users className="h-5 w-5" /> },
-    { name: 'Settings', href: '/admin/settings', icon: <Settings className="h-5 w-5" /> },
-    { name: 'View Storefront', href: '/', icon: <Store className="h-5 w-5" /> },
+    { name: 'Overview', href: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Categories', href: '/admin/categories', icon: FolderTree },
+    { name: 'Products', href: '/admin/products', icon: PackageSearch },
+    { name: 'Reviews', href: '/admin/reviews', icon: MessageSquare },
+    { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+    { name: 'Revenue', href: '/admin/revenue', icon: DollarSign },
+    { name: 'Coupons', href: '/admin/coupons', icon: Ticket },
+    { name: 'Care Guides', href: '/admin/care-guides', icon: BookOpen },
+    { name: 'Users', href: '/admin/users', icon: Users },
+    { name: 'Settings', href: '/admin/settings', icon: Settings },
+    { name: 'View Storefront', href: '/', icon: Store },
+  ];
+
+  // Mobile sidebar sections — same structure as user sidebar
+  const adminMobileSections: MobileSidebarSection[] = [
+    {
+      label: 'Management',
+      items: [
+        { label: 'Overview', href: '/admin/dashboard', icon: LayoutDashboard },
+        { label: 'Categories', href: '/admin/categories', icon: FolderTree },
+        { label: 'Products', href: '/admin/products', icon: PackageSearch },
+        { label: 'Reviews', href: '/admin/reviews', icon: MessageSquare },
+        { label: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+        { label: 'Revenue', href: '/admin/revenue', icon: DollarSign },
+        { label: 'Coupons', href: '/admin/coupons', icon: Ticket },
+        { label: 'Care Guides', href: '/admin/care-guides', icon: BookOpen },
+        { label: 'Users', href: '/admin/users', icon: Users },
+        { label: 'Settings', href: '/admin/settings', icon: Settings },
+      ],
+    },
+    {
+      items: [
+        { label: 'View Storefront', href: '/', icon: Store, exact: true, highlight: 'amber' },
+      ],
+    },
   ];
 
   return (
     <AuthGuard requireAdmin>
       <div className="flex w-full h-[calc(100vh-5rem)] overflow-hidden relative">
-        
-        {/* Mobile sidebar backdrop */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 z-[90] bg-black/50 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
 
-        {/* Sidebar */}
+        {/* Mobile Sidebar — uses the shared MobileSidebar component */}
+        <MobileSidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          sections={adminMobileSections}
+          showSignOut
+          onSignOut={logout}
+        />
+
+        {/* Desktop Sidebar — only visible on lg+ */}
         <aside className={cn(
-          "fixed inset-y-0 left-0 z-[100] bg-background/95 backdrop-blur-xl border-r border-border transform transition-all duration-300 ease-in-out flex flex-col shadow-2xl lg:static lg:translate-x-0 lg:z-0 lg:shadow-none lg:h-full group",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          isCollapsed ? "lg:w-20 w-64" : "w-64"
+          "hidden lg:flex fixed inset-y-0 left-0 z-0 bg-background/95 backdrop-blur-xl border-r border-border transition-all duration-300 ease-in-out flex-col h-full group lg:static",
+          isCollapsed ? "lg:w-20" : "w-64"
         )}>
-          {/* Collapse Toggle (Desktop Only) */}
+          {/* Collapse Toggle */}
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex absolute -right-3 top-6 h-6 w-6 bg-background border border-border rounded-full items-center justify-center text-muted-foreground hover:text-primary hover:border-primary z-50 transition-colors shadow-sm"
+            className="absolute -right-3 top-6 h-6 w-6 bg-background border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary z-50 transition-colors shadow-sm"
           >
             {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
           </button>
@@ -77,40 +101,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <nav className="flex-1 px-4 py-6 lg:pt-12 space-y-2 overflow-y-auto">
             {navItems.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium relative overflow-hidden group/item",
+                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-colors",
                     isActive 
-                      ? "bg-primary/10 text-primary" 
-                      : "text-muted-foreground hover:bg-primary/5 hover:text-primary",
-                    item.name === 'View Storefront' ? "lg:hidden" : "",
-                    isCollapsed ? "lg:justify-center lg:px-0" : ""
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-foreground/80 hover:bg-muted hover:text-foreground",
+                    isCollapsed ? "justify-center px-0" : ""
                   )}
-                  onClick={() => setSidebarOpen(false)}
                   title={isCollapsed ? item.name : undefined}
                 >
-                  {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(var(--primary),0.5)]" />}
-                  <div className={cn("shrink-0", isActive ? "text-primary" : "text-muted-foreground group-hover/item:text-primary transition-colors")}>
-                    {item.icon}
+                  <div className="shrink-0">
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <span className={cn("whitespace-nowrap", isCollapsed ? "lg:hidden" : "")}>{item.name}</span>
+                  <span className={cn("text-base", isCollapsed ? "hidden" : "")}>{item.name}</span>
                 </Link>
               );
             })}
           </nav>
           
-          <div className="p-4 border-t border-border/50">
+          <div className="p-4 border-t border-border/50 shrink-0">
             <Button 
               variant="ghost" 
-              className={cn("flex items-center gap-3 py-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all", isCollapsed ? "lg:justify-center lg:w-12 lg:h-12 lg:p-0 mx-auto justify-start w-full px-4" : "justify-start w-full px-4")}
+              className={cn("flex items-center gap-3 py-3 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all", isCollapsed ? "justify-center w-12 h-12 p-0 mx-auto" : "justify-start w-full px-4")}
               onClick={logout}
               title={isCollapsed ? "Log Out" : undefined}
             >
               <LogOut className="h-5 w-5 shrink-0" />
-              <span className={cn(isCollapsed ? "lg:hidden" : "")}>Log Out</span>
+              <span className={cn(isCollapsed ? "hidden" : "", "text-base")}>Log Out</span>
             </Button>
           </div>
         </aside>

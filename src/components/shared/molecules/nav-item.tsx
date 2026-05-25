@@ -48,15 +48,15 @@ export function NavItem({
       className={cn(
         "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 group relative",
         isActive 
-          ? "bg-brand-accent/10 text-brand-accent shadow-[inset_0_0_10px_rgba(246,173,85,0.05)]" 
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+          ? "bg-primary/10 text-primary font-medium" 
+          : "text-foreground/80 hover:bg-muted hover:text-foreground",
         isCollapsed && "justify-center px-0",
         className
       )}
     >
       <Icon className={cn(
         "h-5 w-5 transition-transform duration-300 group-hover:scale-110",
-        isActive ? "text-brand-accent" : "text-muted-foreground group-hover:text-foreground"
+        isActive ? "text-primary" : "text-foreground/80 group-hover:text-foreground"
       )} />
       
       {!isCollapsed && (
@@ -72,7 +72,7 @@ export function NavItem({
 
       {/* Active Indicator Dot */}
       {isActive && !isCollapsed && (
-        <div className="absolute left-0 w-1 h-4 bg-brand-accent rounded-full" />
+        <div className="absolute left-0 w-1 h-5 bg-primary rounded-r-full" />
       )}
     </Link>
   );

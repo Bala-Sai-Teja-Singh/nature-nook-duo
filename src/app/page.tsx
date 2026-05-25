@@ -68,12 +68,6 @@ export default async function HomePage() {
                   Read Care Guides
                 </Link>
               </div>
-              
-              {/* Mobile Hero Image (visible only on small screens) */}
-              <div className="lg:hidden relative h-64 w-full rounded-2xl overflow-hidden shadow-xl mt-8 animate-hero-text animate-hero-text-delay-4">
-                <div className="absolute inset-0 bg-gradient-to-tr from-brand-primary-light/20 to-brand-accent/20 z-0"></div>
-                <Image src="/images/hero.jpeg" alt="Exotic Pet" fill className="object-cover z-10" priority />
-              </div>
             </div>
 
             <Reveal animation="fade-left" delay={0.4} duration={0.8} className="relative hidden lg:block h-[600px] w-full rounded-3xl overflow-hidden glass shadow-2xl p-4">

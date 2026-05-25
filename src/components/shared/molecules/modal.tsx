@@ -296,7 +296,7 @@ const Modal = React.forwardRef<
       large: 'w-[95vw] sm:w-[850px] max-w-[95vw]',
       'extra-large': 'w-[95vw] sm:w-[1150px] max-w-[95vw]',
       'side-drawer': 'w-[85vw] sm:w-[400px] h-full',
-      'side-drawer-left': 'w-[85vw] sm:w-[400px] h-full left-0 right-auto',
+      'side-drawer-left': 'w-[70vw] sm:w-[300px] h-full left-0 right-auto',
       'side-drawer-right': 'w-[85vw] sm:w-[400px] h-full right-0 left-auto',
       'side-left': 'w-[80vw] sm:w-[320px] h-full left-0 right-auto',
       'side-right': 'w-[80vw] sm:w-[320px] h-full right-0 left-auto',
@@ -321,15 +321,24 @@ const Modal = React.forwardRef<
         {isSideDrawer && (
           <div
             ref={(node) => {
-              if (ref) { 
-                if (typeof ref === 'function') ref(node); 
-                else if (ref && 'current' in ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node; 
+              if (ref) {
+                if (typeof ref === 'function') ref(node);
+                else if (ref && 'current' in ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
               }
               contentRef.current = node as HTMLDivElement | null;
             }}
-            className={cn('fixed top-0 h-full flex flex-col', widthClass, baseContent, size.includes('left') ? 'left-0 right-auto' : 'right-0 left-auto')}
+            className={cn(
+              'absolute top-0 h-full flex flex-col bg-background shadow-2xl modal-content glass border-y-0 border-x border-border overflow-hidden',
+              widthClass,
+              align === 'center' && 'text-center',
+              align === 'right' && 'text-right',
+              className,
+              size.includes('left') ? 'left-0 right-auto' : 'right-0 left-auto'
+            )}
             style={{
               ...sideStyle,
+              left: size.includes('left') ? 0 : 'auto',
+              right: size.includes('left') ? 'auto' : 0,
               width: size === 'second-modal' && !isMobile ? (secondModalWidth ?? calculatedSecondModalWidth ?? undefined) : undefined,
             }}
           >
@@ -364,7 +373,7 @@ const Modal = React.forwardRef<
     function renderHeader() {
       if (!showHeader && !showCloseButton) return null;
       if (header) return <div className={cn('flex-shrink-0 border-b p-4 sm:p-6', headerClassName)}><div className='flex items-center justify-between gap-3'><div className='min-w-0 flex-1'>{header}</div>{renderCloseButton()}</div></div>;
-      
+
       return (
         <div className={cn('flex-shrink-0 border-b p-4 sm:p-6', headerClassName)}>
           <div className='flex items-center justify-between gap-3'>

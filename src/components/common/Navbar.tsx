@@ -19,9 +19,12 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useNotificationStore } from '@/store/notification-store';
 import { NotificationCenter } from '@/components/shared/notification-center';
+import { Modal } from '@/components/shared/molecules/modal';
+import { MobileSidebar, type MobileSidebarSection } from '@/components/common/MobileSidebar';
 
 export function Navbar() {
   const { items, totalPrice, totalItems, updateQuantity, removeItem } = useCart();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
   const { setAdminSidebarOpen } = useUiStore();
   const pathname = usePathname();
@@ -61,6 +64,31 @@ export function Navbar() {
     return `cursor-pointer ${isActive ? 'bg-primary/10 text-primary font-medium' : ''}`;
   };
 
+  // Build mobile sidebar sections for the user view
+  const userMobileSections: MobileSidebarSection[] = [
+    {
+      items: [
+        { label: 'Shop', href: '/shop', icon: ShoppingBag },
+        { label: 'Care Guides', href: '/care-guides', icon: BookOpen },
+      ],
+    },
+    ...(isAuthenticated
+      ? [
+          {
+            label: 'Your Account',
+            items: [
+              { label: 'Favorites', href: '/liked', icon: Heart, exact: true },
+              { label: 'My Orders', href: '/dashboard/orders', icon: Package, exact: true },
+              { label: 'Profile', href: '/dashboard/profile', icon: UserIcon, exact: true },
+              ...(user?.role === 'admin'
+                ? [{ label: 'Admin Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, highlight: 'amber' as const }]
+                : []),
+            ],
+          } satisfies MobileSidebarSection,
+        ]
+      : []),
+  ];
+
   return (
     <>
       <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-background/90 backdrop-blur-xl border-b border-border shadow-sm' : 'bg-background/80 backdrop-blur-lg border-b border-border/40'}`}>
@@ -91,14 +119,27 @@ export function Navbar() {
                   </Link>
                 </>
               ) : (
-                <Link href="/" className="flex items-center gap-2 group">
-                  <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                    <Leaf className="h-6 w-6 animate-pulse-glow" />
+                <>
+                  <div className="flex md:hidden items-center gap-2">
+                    <button 
+                      onClick={() => setIsMobileMenuOpen(true)}
+                      className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 outline-none"
+                    >
+                      <Menu className="h-6 w-6" />
+                    </button>
+                    <span className="font-heading text-2xl font-bold tracking-tight text-primary hidden sm:inline-block">
+                      Nature's Nook Duo
+                    </span>
                   </div>
-                  <span className="font-heading text-2xl font-bold tracking-tight text-primary hidden sm:inline-block">
-                    Nature's Nook Duo
-                  </span>
-                </Link>
+                  <Link href="/" className="hidden md:flex items-center gap-2 group">
+                    <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                      <Leaf className="h-6 w-6 animate-pulse-glow" />
+                    </div>
+                    <span className="font-heading text-2xl font-bold tracking-tight text-primary">
+                      Nature's Nook Duo
+                    </span>
+                  </Link>
+                </>
               )}
             </div>
 
@@ -226,62 +267,6 @@ export function Navbar() {
                 </Link>
               )}
 
-              {/* Mobile Menu Toggle */}
-              {!pathname.startsWith('/admin') && (
-                <div className="md:hidden">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg hover:bg-muted text-foreground/80 hover:text-primary outline-none">
-                      <Menu className="h-6 w-6" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48 bg-background border">
-                      <Link href="/shop">
-                        <DropdownMenuItem className={getMobileLinkClasses('/shop')}>
-                          <ShoppingBag className="mr-2 h-4 w-4" />
-                          Shop
-                        </DropdownMenuItem>
-                      </Link>
-                      <Link href="/care-guides">
-                        <DropdownMenuItem className={getMobileLinkClasses('/care-guides')}>
-                          <BookOpen className="mr-2 h-4 w-4" />
-                          Care Guides
-                        </DropdownMenuItem>
-                      </Link>
-                      {!isAuthenticated && (
-                        <Link href="/login">
-                          <DropdownMenuItem className={getMobileLinkClasses('/login')}>
-                            <UserIcon className="mr-2 h-4 w-4" />
-                            Sign In
-                          </DropdownMenuItem>
-                        </Link>
-                      )}
-                      {isAuthenticated && (
-                        <>
-                          <Link href="/liked">
-                            <DropdownMenuItem className={getMobileLinkClasses('/liked')}>
-                              <Heart className="mr-2 h-4 w-4" />
-                              Favorites
-                            </DropdownMenuItem>
-                          </Link>
-                          <Link href="/dashboard/orders">
-                            <DropdownMenuItem className={getMobileLinkClasses('/dashboard/orders')}>
-                              <Package className="mr-2 h-4 w-4" />
-                              My Orders
-                            </DropdownMenuItem>
-                          </Link>
-                        </>
-                      )}
-                      {user?.role === 'admin' && (
-                        <Link href="/admin/dashboard">
-                          <DropdownMenuItem className="cursor-pointer text-amber-600 dark:text-amber-500 font-medium bg-amber-50 dark:bg-amber-500/10 mt-1">
-                            <LayoutDashboard className="mr-2 h-4 w-4" />
-                            Admin Dashboard
-                          </DropdownMenuItem>
-                        </Link>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -375,6 +360,16 @@ export function Navbar() {
         </div>
       )}
       <NotificationCenter open={showNotifications} onOpenChange={setShowNotifications} />
+
+      {/* Mobile Menu */}
+      <MobileSidebar
+        open={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        sections={userMobileSections}
+        showSignOut={isAuthenticated}
+        onSignOut={logout}
+        showSignIn={!isAuthenticated}
+      />
     </>
   );
 }
