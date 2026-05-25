@@ -20,6 +20,7 @@ import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
 import { useFavoriteStore } from '@/store/favorite-store';
 import { useModules } from '@/hooks/use-modules';
+import { Loading } from '@/components/shared/molecules/loading';
 
 const careLevelColors: Record<string, string> = {
   beginner: 'bg-green-500 text-black hover:bg-green-400',
@@ -118,11 +119,7 @@ export default function FavoritesPage() {
           </div>
         </div>
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-80 rounded-xl bg-card/20 animate-pulse border border-border" />
-          ))}
-        </div>
+        <Loading />
       ) : totalFavorites === 0 ? (
         <EmptyState
           title="No favorites yet"
