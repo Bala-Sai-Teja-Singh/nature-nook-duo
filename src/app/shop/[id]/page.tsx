@@ -4,6 +4,7 @@ import { ProductModel, ReviewModel } from '@/models';
 import type { Product, Review } from '@/types';
 import { ProductDetailsClient } from '@/components/product/product-details-client';
 import { Types } from 'mongoose';
+import { Reveal } from '@/components/shared/reveal';
 
 export const revalidate = 60;
 
@@ -47,7 +48,9 @@ export default async function ProductDetailsPage(props: { params: Promise<{ id: 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 lg:py-12">
-        <ProductDetailsClient product={product} initialReviews={reviews} />
+        <Reveal animation="fade-up">
+          <ProductDetailsClient product={product} initialReviews={reviews} />
+        </Reveal>
       </div>
     </div>
   );

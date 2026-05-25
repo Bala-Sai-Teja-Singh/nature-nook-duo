@@ -8,6 +8,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { EmptyState } from '@/components/shared/molecules/empty-state';
+import { Reveal, StaggerContainer } from '@/components/shared/reveal';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,11 +46,11 @@ async function ProductGridFetcher({ query, q, categoryFilter }: { query: any, q:
       </div>
 
       {products.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+        <StaggerContainer animation="zoom-in" staggerDelay={0.08} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
           {products.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
-        </div>
+        </StaggerContainer>
       ) : (
         <EmptyState
           title="No pets found"
@@ -107,9 +108,9 @@ export default async function ProductsPage(props: {
   return (
     <div className="flex flex-col min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+        <Reveal animation="fade-down" className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <h1 className="font-heading text-4xl font-bold text-foreground">Shop Companions</h1>
-        </div>
+        </Reveal>
         <div className="flex flex-col gap-8">
           
           <div className="glass rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">

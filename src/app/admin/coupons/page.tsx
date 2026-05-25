@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/components/shared/reveal';
 import { useEffect, useState } from 'react';
 import { Plus, Search, Edit, Trash2, Ticket, Percent, DollarSign, Calendar, Save, Loader2, Info } from 'lucide-react';
 import { toast } from 'sonner';
@@ -244,7 +245,7 @@ export default function AdminCouponsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <Reveal animation="fade-up" className="space-y-6">
       <SectionHeader
         title="Coupons Management"
         description="Create and manage discount codes for your customers."
@@ -724,6 +725,6 @@ export default function AdminCouponsPage() {
       >
         <p>Are you sure you want to delete this discount coupon? This action cannot be undone.</p>
       </Modal>
-    </div>
+    </Reveal>
   );
 }

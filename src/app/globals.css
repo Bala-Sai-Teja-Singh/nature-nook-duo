@@ -196,13 +196,13 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans min-h-screen flex flex-col overflow-x-hidden;
+    @apply bg-background text-foreground font-sans min-h-screen flex flex-col;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight;
   }
   html {
-    @apply scroll-smooth h-full overflow-x-hidden;
+    @apply scroll-smooth;
   }
   
   /* Prevent auto-zoom on mobile inputs */
@@ -383,3 +383,248 @@
 .nature-badge {
   @apply rounded-full px-3 py-1 text-xs font-medium;
 }
+
+/* ================================================================
+   REVEAL ANIMATION SYSTEM
+   GPU-accelerated scroll-triggered animations.
+   Uses transform + opacity only for maximum performance.
+   ================================================================ */
+
+/* Base reveal state — hidden before intersection */
+.reveal {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity, filter;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: var(--reveal-duration, 0.6s);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+/* Pre-animation transforms */
+.reveal-fade-up { transform: translateY(32px); }
+.reveal-fade-down { transform: translateY(-32px); }
+.reveal-fade-left { transform: translateX(-32px); }
+.reveal-fade-right { transform: translateX(32px); }
+.reveal-fade-in { transform: none; }
+.reveal-zoom-in { transform: scale(0.92); }
+.reveal-zoom-out { transform: scale(1.08); }
+.reveal-blur-in { transform: translateY(16px); filter: blur(8px); }
+.reveal-slide-up { transform: translateY(60px); }
+.reveal-flip-up { transform: perspective(800px) rotateX(8deg) translateY(24px); }
+
+/* Visible state — element has entered viewport */
+.reveal-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ================================================================
+   STAGGER ANIMATION SYSTEM
+   Container-based stagger for child elements.
+   ================================================================ */
+
+.stagger-container > * {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity, filter;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 0.6s;
+}
+
+.stagger-fade-up > * { transform: translateY(32px); }
+.stagger-fade-down > * { transform: translateY(-32px); }
+.stagger-fade-left > * { transform: translateX(-32px); }
+.stagger-fade-right > * { transform: translateX(32px); }
+.stagger-fade-in > * { transform: none; }
+.stagger-zoom-in > * { transform: scale(0.92); }
+.stagger-blur-in > * { transform: translateY(16px); filter: blur(8px); }
+
+.stagger-visible > *:nth-child(1) { transition-delay: calc(var(--stagger-delay, 0.1s) * 0); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(2) { transition-delay: calc(var(--stagger-delay, 0.1s) * 1); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(3) { transition-delay: calc(var(--stagger-delay, 0.1s) * 2); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(4) { transition-delay: calc(var(--stagger-delay, 0.1s) * 3); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(5) { transition-delay: calc(var(--stagger-delay, 0.1s) * 4); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(6) { transition-delay: calc(var(--stagger-delay, 0.1s) * 5); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(7) { transition-delay: calc(var(--stagger-delay, 0.1s) * 6); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(8) { transition-delay: calc(var(--stagger-delay, 0.1s) * 7); opacity: 1; transform: none; filter: none; }
+.stagger-visible > *:nth-child(n+9) { transition-delay: calc(var(--stagger-delay, 0.1s) * 8); opacity: 1; transform: none; filter: none; }
+
+/* ================================================================
+   PAGE TRANSITION ANIMATION
+   Smooth fade-in for new page content.
+   ================================================================ */
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+main > *:first-child {
+  animation: page-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ================================================================
+   MICRO-INTERACTIONS
+   Subtle hover/active/focus effects for interactive elements.
+   ================================================================ */
+
+/* Smooth button press effect */
+.nature-button,
+button[class*="rounded-full"],
+a[class*="rounded-full"] {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+button:active:not(:disabled),
+a[class*="rounded-full"]:active {
+  transform: scale(0.97) !important;
+}
+
+/* Smooth card hover lift */
+.nature-card {
+  @apply rounded-2xl border border-border bg-card shadow-sm transition-all duration-500;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nature-card:hover {
+  @apply shadow-lg -translate-y-1;
+  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.08);
+}
+
+/* Glass card shimmer on hover */
+.glass {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 55%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass:hover::after {
+  transform: translateX(100%);
+}
+
+/* Input focus glow */
+input:focus,
+textarea:focus,
+[data-slot="input"]:focus {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease !important;
+  box-shadow: 0 0 0 3px rgba(45, 95, 45, 0.1) !important;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark [data-slot="input"]:focus {
+  box-shadow: 0 0 0 3px rgba(91, 166, 91, 0.15) !important;
+}
+
+/* Badge pulse for notifications */
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.badge-animate {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+/* Cart item enter/exit */
+@keyframes cart-item-enter {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes cart-item-exit {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateX(-20px) scale(0.95); }
+}
+
+/* Quantity counter pop */
+@keyframes counter-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Smooth skeleton loading */
+@keyframes skeleton-wave {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-wave {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    var(--muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.8s ease-in-out infinite;
+}
+
+/* ================================================================
+   ENHANCED EXISTING ANIMATIONS
+   ================================================================ */
+
+/* Smoother float with slight rotation */
+@keyframes float-enhanced {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-6px) rotate(0.5deg); }
+  75% { transform: translateY(4px) rotate(-0.5deg); }
+}
+
+.animate-float {
+  animation: float-enhanced 6s ease-in-out infinite;
+}
+
+/* Hero text reveal */
+@keyframes hero-text-reveal {
+  from { opacity: 0; transform: translateY(30px); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+.animate-hero-text {
+  animation: hero-text-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-hero-text-delay-1 { animation-delay: 0.15s; }
+.animate-hero-text-delay-2 { animation-delay: 0.3s; }
+.animate-hero-text-delay-3 { animation-delay: 0.45s; }
+.animate-hero-text-delay-4 { animation-delay: 0.6s; }
+
+/* Checkout success confetti-like burst */
+@keyframes success-burst {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-success-burst {
+  animation: success-burst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Smooth number counter transition */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Removed prefers-reduced-motion block to guarantee animations play for demonstration purposes */

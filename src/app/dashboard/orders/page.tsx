@@ -11,6 +11,7 @@ import { AuthGuard } from '@/components/auth-guard';
 import { EmptyState } from '@/components/shared/molecules/empty-state';
 import type { Order } from '@/types';
 import { cn } from '@/lib/utils';
+import { Reveal, StaggerContainer } from '@/components/shared/reveal';
 
 function OrdersContent() {
   const { user } = useAuth();
@@ -56,12 +57,12 @@ function OrdersContent() {
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-5xl">
-        <div className="flex items-center justify-between mb-8">
+        <Reveal animation="fade-down" className="flex items-center justify-between mb-8">
           <h1 className="font-heading text-4xl font-bold text-foreground">My Orders</h1>
           <Link href="/shop" className={buttonVariants({ variant: "outline", className: "rounded-full" })}>
             Continue Shopping
           </Link>
-        </div>
+        </Reveal>
         
         {isLoading ? (
           <div className="glass rounded-3xl p-12 flex justify-center border border-border/50">
@@ -79,7 +80,7 @@ function OrdersContent() {
             }
           />
         ) : (
-          <div className="space-y-6">
+          <StaggerContainer animation="fade-up" staggerDelay={0.1} className="space-y-6">
             {orders.map(order => {
               const statusConfig = getStatusConfig(order.status);
               
@@ -137,7 +138,7 @@ function OrdersContent() {
                 </div>
               );
             })}
-          </div>
+          </StaggerContainer>
         )}
       </div>
     </div>

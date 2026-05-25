@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { AuthGuard } from '@/components/auth-guard';
 import type { Address } from '@/types';
+import { Reveal, StaggerContainer } from '@/components/shared/reveal';
 
 function ProfileContent() {
   const { user, updateProfile } = useAuth();
@@ -129,12 +130,12 @@ function ProfileContent() {
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-4xl">
-        <h1 className="font-heading text-4xl font-bold mb-8 text-foreground">My Profile</h1>
+        <h1 className="font-heading text-4xl font-bold mb-8 text-foreground animate-hero-text">My Profile</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Sidebar Info */}
-          <div className="md:col-span-1 space-y-6">
+          <Reveal animation="fade-right" delay={0.1} className="md:col-span-1 space-y-6">
             <div className="glass rounded-3xl p-8 flex flex-col items-center text-center border border-border/50 shadow-sm">
               <div className="relative group mb-4">
                 {formData.avatar ? (
@@ -166,11 +167,11 @@ function ProfileContent() {
                 </div>
               </div>
             </div>
-          </div>
+          </Reveal>
           
           {/* Edit Form */}
           <div className="md:col-span-2 space-y-6">
-            <div className="glass rounded-3xl p-8 border border-border/50 shadow-sm">
+            <Reveal animation="fade-up" delay={0.2} className="glass rounded-3xl p-8 border border-border/50 shadow-sm">
               <h3 className="font-heading text-2xl font-bold mb-6">Edit Details</h3>
               <form onSubmit={handleSaveProfile} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -192,10 +193,10 @@ function ProfileContent() {
                   {isSaving ? 'Saving...' : 'Save Changes'}
                 </Button>
               </form>
-            </div>
+            </Reveal>
 
             {/* Address Book */}
-            <div className="glass rounded-3xl p-8 border border-border/50 shadow-sm">
+            <Reveal animation="fade-up" delay={0.3} className="glass rounded-3xl p-8 border border-border/50 shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="font-heading text-2xl font-bold">Saved Addresses</h3>
                 <Button variant="outline" size="sm" className="rounded-full" onClick={() => setIsAddingAddress(!isAddingAddress)}>
@@ -238,10 +239,10 @@ function ProfileContent() {
                   ))
                 )}
               </div>
-            </div>
+            </Reveal>
 
             {/* Change Password */}
-            <div className="glass rounded-3xl p-8 border border-border/50 shadow-sm">
+            <Reveal animation="fade-up" delay={0.4} className="glass rounded-3xl p-8 border border-border/50 shadow-sm">
               <h3 className="font-heading text-2xl font-bold mb-6 flex items-center gap-2">
                 <Lock className="h-5 w-5 text-primary" /> Change Password
               </h3>
@@ -336,7 +337,7 @@ function ProfileContent() {
                   {changingPwd ? 'Changing...' : 'Change Password'}
                 </Button>
               </form>
-            </div>
+            </Reveal>
             
           </div>
         </div>

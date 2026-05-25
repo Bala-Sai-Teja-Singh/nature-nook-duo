@@ -8,6 +8,7 @@ import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Truck } from 'lucide-rea
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useCart } from '@/hooks/use-cart';
 import { EmptyState } from '@/components/shared/molecules/empty-state';
+import { Reveal } from '@/components/shared/reveal';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, clearCart } = useCart();
@@ -23,7 +24,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4 max-w-6xl">
-        <h1 className="font-heading text-4xl font-bold mb-8 text-foreground">Your Cart</h1>
+        <h1 className="font-heading text-4xl font-bold mb-8 text-foreground animate-hero-text">Your Cart</h1>
         
         {items.length === 0 ? (
           <EmptyState
@@ -43,8 +44,12 @@ export default function CartPage() {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-6">
               <div className="glass rounded-2xl overflow-hidden">
-                {items.map((item) => (
-                  <div key={item.id} className="p-6 border-b border-border/50 last:border-0 flex flex-col sm:flex-row gap-6 bg-card/40">
+                {items.map((item, index) => (
+                  <div 
+                    key={item.id} 
+                    className="p-6 border-b border-border/50 last:border-0 flex flex-col sm:flex-row gap-6 bg-card/40 transition-all duration-300 hover:bg-card/60"
+                    style={{ animation: `cart-item-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.08}s both` }}
+                  >
                     {/* Item Image */}
                     <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden shrink-0 bg-muted">
                       {item.image ? (
@@ -104,7 +109,7 @@ export default function CartPage() {
             </div>
 
             {/* Order Summary */}
-            <div className="lg:col-span-1">
+            <Reveal animation="fade-left" delay={0.2} className="lg:col-span-1">
               <div className="glass rounded-2xl p-6 sticky top-28 space-y-6">
                 <h3 className="font-heading text-2xl font-bold border-b border-border/50 pb-4">Order Summary</h3>
                 
@@ -143,7 +148,7 @@ export default function CartPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
             
           </div>
         )}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { DollarSign, Users, ShoppingCart, PackageSearch } from 'lucide-react';
+import { Reveal } from '@/components/shared/reveal';
 
 export default function DashboardOverviewPage() {
   const [stats, setStats] = useState({
@@ -30,14 +31,14 @@ export default function DashboardOverviewPage() {
   }, []);
 
   const statCards = [
-    { name: 'Total Revenue', value: `₹${stats.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}`, icon: <DollarSign className="h-6 w-6" />, color: 'text-green-600', bg: 'bg-green-100' },
+    { name: 'Total Revenue', value: `₹${stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, icon: <DollarSign className="h-6 w-6" />, color: 'text-green-600', bg: 'bg-green-100' },
     { name: 'Active Orders', value: stats.totalOrders, icon: <ShoppingCart className="h-6 w-6" />, color: 'text-blue-600', bg: 'bg-blue-100' },
     { name: 'Total Products', value: stats.totalProducts, icon: <PackageSearch className="h-6 w-6" />, color: 'text-amber-600', bg: 'bg-amber-100' },
     { name: 'Registered Users', value: stats.totalUsers, icon: <Users className="h-6 w-6" />, color: 'text-indigo-600', bg: 'bg-indigo-100' },
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <Reveal animation="fade-up" className="space-y-8">
       <div>
         <h1 className="font-heading text-3xl font-bold text-foreground">Dashboard Overview</h1>
         <p className="text-muted-foreground mt-1">Welcome back, Admin. Here is what's happening at Nature's Nook Duo today.</p>
@@ -75,7 +76,7 @@ export default function DashboardOverviewPage() {
           <p className="text-muted-foreground text-sm max-w-xs mb-6">Keep your companions fully stocked and descriptions up to date.</p>
           <a href="/admin/products" className="text-sm font-medium text-primary hover:underline">Go to Products &rarr;</a>
         </div>
-        
+
         <div className="glass rounded-2xl p-6 border border-border/50 shadow-sm h-80 flex flex-col justify-center items-center text-center">
           <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <ShoppingCart className="h-8 w-8 text-primary" />
@@ -85,6 +86,6 @@ export default function DashboardOverviewPage() {
           <a href="/admin/orders" className="text-sm font-medium text-primary hover:underline">Go to Orders &rarr;</a>
         </div>
       </div>
-    </div>
+    </Reveal>
   );
 }

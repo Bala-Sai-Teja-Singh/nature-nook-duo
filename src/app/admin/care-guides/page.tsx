@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/components/shared/reveal';
 import { useEffect, useState } from 'react';
 import { Plus, Search, Edit, Trash2, BookOpen, FileText, Save, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -88,7 +89,7 @@ export default function AdminCareGuidesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <Reveal animation="fade-up" className="space-y-6">
       <SectionHeader
         title="Care Guides Management"
         description="Publish and manage expert care guides for exotic pets."
@@ -253,6 +254,6 @@ export default function AdminCareGuidesPage() {
       >
         <p >Are you sure you want to delete this care guide? This action cannot be undone.</p>
       </Modal>
-    </div>
+    </Reveal>
   );
 }

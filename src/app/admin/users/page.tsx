@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/components/shared/reveal';
 import { useEffect, useState } from 'react';
 import { Shield, ShieldAlert, Trash2, Key, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -85,7 +86,7 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <Reveal animation="fade-up" className="space-y-6">
       <SectionHeader 
         title="User Management"
         description="Manage customer accounts, roles, and privileges."
@@ -234,6 +235,6 @@ export default function AdminUsersPage() {
           </div>
         </div>
       </Modal>
-    </div>
+    </Reveal>
   );
 }

@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { 
-  PackageSearch, 
-  Plus, 
-  MoreHorizontal, 
-  Check, 
-  X, 
-  ShieldCheck, 
-  Leaf, 
+import {
+  PackageSearch,
+  Plus,
+  MoreHorizontal,
+  Check,
+  X,
+  ShieldCheck,
+  Leaf,
   Search,
-  Loader2, 
+  Loader2,
   Save,
   Edit2,
   Eye,
@@ -28,14 +28,15 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/shared/atoms/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Db } from '@/lib/db';
 import type { Category } from '@/types';
+import { Reveal } from '@/components/shared/reveal';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -130,7 +131,7 @@ export default function AdminProductsPage() {
       toast({ title: 'Error', description: 'Name and Category are required.', variant: 'destructive' });
       return;
     }
-    
+
     // Check if at least one custom Meta field is filled
     const hasCustomMeta = Object.values(formData.customMeta || {}).some(val => val && String(val).trim() !== '');
     if (!hasCustomMeta && selectedCategoryData && selectedCategoryData.fields.length > 0) {
@@ -203,7 +204,7 @@ export default function AdminProductsPage() {
   const selectedCategoryData = categories.find(c => c.name === formData.mainCategory || c.id === formData.mainCategory);
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <Reveal animation="fade-up" className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-heading text-3xl font-bold text-foreground">Product Management</h1>
@@ -224,9 +225,9 @@ export default function AdminProductsPage() {
       <div className="flex flex-col sm:flex-row items-center gap-4 bg-card p-4 rounded-2xl border border-border/50 shadow-sm">
         <div className="relative w-full sm:w-72">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input 
+          <input
             type="text"
-            placeholder="Search products..." 
+            placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 h-10 rounded-xl bg-background border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
@@ -324,14 +325,14 @@ export default function AdminProductsPage() {
                           </Button>
                         } />
                         <DropdownMenuContent align="end" className="bg-background border-border shadow-xl">
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => handleEditProduct(product)}
                             className="cursor-pointer flex items-center gap-2"
                           >
                             <Edit2 className="h-4 w-4 text-muted-foreground" />
                             Edit Product
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => handleToggleVisibility(product)}
                             className="cursor-pointer flex items-center gap-2"
                           >
@@ -347,7 +348,7 @@ export default function AdminProductsPage() {
                               </>
                             )}
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => handleDeleteProduct(product.id)}
                             className="cursor-pointer flex items-center gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                           >
@@ -374,16 +375,16 @@ export default function AdminProductsPage() {
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label>Product Name</Label>
-            <Input 
-              value={formData.name || ''} 
-              onChange={e => setFormData({ ...formData, name: e.target.value })} 
+            <Input
+              value={formData.name || ''}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
               placeholder="e.g. Mexican Redknee"
             />
           </div>
           <div className="space-y-2">
             <Label>Category</Label>
-            <Select 
-              value={typeof formData.mainCategory === 'string' ? formData.mainCategory : ''} 
+            <Select
+              value={typeof formData.mainCategory === 'string' ? formData.mainCategory : ''}
               onValueChange={val => setFormData({ ...formData, mainCategory: val || '', customMeta: {} })}
             >
               <SelectTrigger className="w-full">
@@ -398,25 +399,25 @@ export default function AdminProductsPage() {
           </div>
           <div className="space-y-2">
             <Label>Breed / Species</Label>
-            <Input 
-              value={formData.breed || ''} 
-              onChange={e => setFormData({ ...formData, breed: e.target.value })} 
+            <Input
+              value={formData.breed || ''}
+              onChange={e => setFormData({ ...formData, breed: e.target.value })}
               placeholder="e.g. Brachypelma smithi"
             />
           </div>
           <div className="space-y-2">
             <Label>Image URL</Label>
-            <Input 
-              value={formData.images?.[0] || ''} 
-              onChange={e => setFormData({ ...formData, images: [e.target.value] })} 
+            <Input
+              value={formData.images?.[0] || ''}
+              onChange={e => setFormData({ ...formData, images: [e.target.value] })}
               placeholder="https://example.com/image.jpg"
             />
           </div>
           <div className="space-y-2">
             <Label>Description</Label>
-            <Textarea 
-              value={formData.description || ''} 
-              onChange={e => setFormData({ ...formData, description: e.target.value })} 
+            <Textarea
+              value={formData.description || ''}
+              onChange={e => setFormData({ ...formData, description: e.target.value })}
               placeholder="Provide a detailed description of the product..."
               className="min-h-[100px]"
             />
@@ -436,8 +437,8 @@ export default function AdminProductsPage() {
                     {field.required && <span className="text-red-500 ml-1">*</span>}
                   </Label>
                   {field.type === 'select' || field.type === 'multi-select' ? (
-                    <Select 
-                      value={formData.customMeta?.[field.id] || ''} 
+                    <Select
+                      value={formData.customMeta?.[field.id] || ''}
                       onValueChange={val => setFormData({ ...formData, customMeta: { ...formData.customMeta, [field.id]: val || '' } })}
                     >
                       <SelectTrigger className="w-full">
@@ -450,10 +451,10 @@ export default function AdminProductsPage() {
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Input 
+                    <Input
                       type={field.type === 'number' ? 'number' : 'text'}
-                      value={formData.customMeta?.[field.id] || ''} 
-                      onChange={e => setFormData({ ...formData, customMeta: { ...formData.customMeta, [field.id]: e.target.value } })} 
+                      value={formData.customMeta?.[field.id] || ''}
+                      onChange={e => setFormData({ ...formData, customMeta: { ...formData.customMeta, [field.id]: e.target.value } })}
                       placeholder={`Enter ${field.label.toLowerCase()}`}
                     />
                   )}
@@ -471,6 +472,6 @@ export default function AdminProductsPage() {
           </div>
         </div>
       </Modal>
-    </div>
+    </Reveal>
   );
 }

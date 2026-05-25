@@ -10,6 +10,7 @@ import { useCart } from '@/hooks/use-cart';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { Reveal } from '@/components/shared/reveal';
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
@@ -124,9 +125,9 @@ export default function CheckoutPage() {
   if (orderSuccess) {
     return (
       <div className="min-h-screen bg-background py-20 flex items-center justify-center">
-        <div className="glass rounded-3xl p-12 text-center flex flex-col items-center max-w-2xl mx-4 shadow-xl border border-primary/20">
-          <div className="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center mb-6">
-            <CheckCircle2 className="h-12 w-12 text-green-600" />
+        <div className="glass rounded-3xl p-12 text-center flex flex-col items-center max-w-2xl mx-4 shadow-xl border border-primary/20 animate-hero-text animate-hero-text-delay-1">
+          <div className="h-24 w-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 animate-success-burst">
+            <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" />
           </div>
           <h1 className="font-heading text-4xl font-bold mb-4 text-foreground">Order Successful!</h1>
           <p className="text-lg text-muted-foreground mb-8">
@@ -162,6 +163,7 @@ export default function CheckoutPage() {
           
           {/* Delivery Details */}
           <div className="lg:col-span-3 space-y-8">
+            <Reveal animation="fade-up" delay={0.1}>
             <div className="glass rounded-2xl p-6 md:p-8 border border-border/50">
               <h2 className="font-heading text-2xl font-bold mb-6 border-b border-border/50 pb-4">Shipping Information</h2>
               
@@ -226,7 +228,9 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
+            </Reveal>
 
+            <Reveal animation="fade-up" delay={0.2}>
             <div className="glass rounded-2xl p-6 md:p-8 border border-border/50">
                <h2 className="font-heading text-2xl font-bold mb-6 border-b border-border/50 pb-4">Payment Method</h2>
                <div className="p-4 rounded-xl border-2 border-primary/20 bg-primary/5 flex items-center justify-between">
@@ -240,10 +244,11 @@ export default function CheckoutPage() {
                  (Demo environment: Clicking Place Order will create a pending order directly)
                </p>
             </div>
+            </Reveal>
           </div>
 
           {/* Order Summary sidebar */}
-          <div className="lg:col-span-2">
+          <Reveal animation="fade-left" delay={0.3} className="lg:col-span-2">
             <div className="glass rounded-2xl p-6 md:p-8 sticky top-28 border border-border/50 shadow-lg">
               <h3 className="font-heading text-2xl font-bold border-b border-border/50 pb-4 mb-6">Order Summary</h3>
               
@@ -294,7 +299,7 @@ export default function CheckoutPage() {
                 <span>256-bit secure SSL encryption</span>
               </div>
             </div>
-          </div>
+          </Reveal>
           
         </form>
       </div>

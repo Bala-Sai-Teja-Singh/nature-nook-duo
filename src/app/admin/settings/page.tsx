@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/components/shared/reveal';
 import { Save, Loader2, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -161,7 +162,7 @@ export default function AdminSettingsPage() {
   if (!settings) return <div className="p-8 text-center text-muted-foreground">Loading settings...</div>;
 
   return (
-    <div className="space-y-6">
+    <Reveal animation="fade-up" className="space-y-6">
       <SectionHeader 
         title="System Settings"
         description="Configure payment methods, shipping rules, and global store settings."
@@ -430,6 +431,6 @@ export default function AdminSettingsPage() {
 
         </div>
       </div>
-    </div>
+    </Reveal>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/components/shared/reveal';
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
@@ -362,7 +363,7 @@ export default function AdminCategoriesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <Reveal animation="fade-up" className="space-y-6">
       <SectionHeader
         title="Categories Management"
         description="Organize your shop's categories and define their custom data fields."
@@ -556,6 +557,6 @@ export default function AdminCategoriesPage() {
         <p>Are you sure you want to delete this category? This action cannot be undone.</p>
         <p className="text-sm text-muted-foreground mt-2">Note: You cannot delete a category if products are still assigned to it.</p>
       </Modal>
-    </div>
+    </Reveal>
   );
 }

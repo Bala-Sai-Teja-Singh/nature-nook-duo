@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/components/shared/reveal';
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
@@ -173,7 +174,7 @@ export default function AdminRevenuePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <Reveal animation="fade-up" className="space-y-6">
       <SectionHeader 
         title="Revenue Dashboard"
         description="Track your shop's financial performance and transactions."
@@ -294,6 +295,6 @@ export default function AdminRevenuePage() {
         )}
         emptyDescription="No transactions found."
       />
-    </div>
+    </Reveal>
   );
 }

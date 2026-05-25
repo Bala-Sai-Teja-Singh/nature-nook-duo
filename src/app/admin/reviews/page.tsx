@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/components/shared/reveal';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -76,7 +77,7 @@ export default function AdminReviewsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <Reveal animation="fade-up" className="space-y-6">
       <SectionHeader 
         title="Reviews Management"
         description="Approve, reject, or manage customer reviews."
@@ -252,6 +253,6 @@ export default function AdminReviewsPage() {
       >
         <p>Are you sure you want to reject this review? It will be hidden from the public shop.</p>
       </Modal>
-    </div>
+    </Reveal>
   );
 }

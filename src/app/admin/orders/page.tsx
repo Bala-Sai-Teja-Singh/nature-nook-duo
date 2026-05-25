@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ShoppingCart, Eye, Filter } from 'lucide-react';
+import { ShoppingCart, Eye, Filter, Search, SlidersHorizontal, CheckCircle2, Clock, XCircle, Truck, PackageOpen } from 'lucide-react';
+import { Reveal } from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Order } from '@/types';
 import { TabMolecule } from '@/components/shared/molecules/tabs';
-import { Search } from 'lucide-react';
 import { Input } from '@/components/shared/atoms/input';
 
 export default function AdminOrdersPage() {
@@ -45,7 +45,7 @@ export default function AdminOrdersPage() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <Reveal animation="fade-up" className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-heading text-3xl font-bold text-foreground">Order Management</h1>
@@ -148,6 +148,6 @@ export default function AdminOrdersPage() {
           </table>
         </div>
       </div>
-    </div>
+    </Reveal>
   );
 }

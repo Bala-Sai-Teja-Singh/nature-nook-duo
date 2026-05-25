@@ -177,19 +177,19 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4">
-      <Link href="/" className="flex items-center gap-2 mb-8 group">
+      <Link href="/" className="flex items-center gap-2 mb-8 group animate-hero-text">
         <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-          <Leaf className="h-7 w-7" />
+          <Leaf className="h-7 w-7 animate-gentle-bounce" />
         </div>
         <span className="font-heading text-3xl font-bold tracking-tight text-primary">
           Nature&apos;s Nook Duo
         </span>
       </Link>
       
-      <div className="glass w-full max-w-md rounded-3xl p-8 border border-border/50 shadow-xl">
+      <div className="glass w-full max-w-md rounded-3xl p-8 border border-border/50 shadow-xl animate-hero-text animate-hero-text-delay-1">
         <div className="text-center mb-8">
-          <h1 className="font-heading text-3xl font-bold mb-2">{getTitle()}</h1>
-          <p className="text-muted-foreground text-sm">{getSubtitle()}</p>
+          <h1 className="font-heading text-3xl font-bold mb-2 transition-all duration-300">{getTitle()}</h1>
+          <p className="text-muted-foreground text-sm transition-all duration-300">{getSubtitle()}</p>
         </div>
 
         {/* Login / Signup Form */}
