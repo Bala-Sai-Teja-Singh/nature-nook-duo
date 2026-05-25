@@ -18,6 +18,7 @@ import { TabMolecule, type TabOption } from '@/components/shared/molecules/tabs'
 import { SectionHeader } from '@/components/shared/molecules/section-header';
 import { toast } from 'sonner';
 import type { ReviewStatus } from '@/types';
+import { Loading } from '@/components/shared/molecules/loading';
 
 const REVIEW_CATEGORIES: TabOption[] = [
   { value: 'all', label: 'All' },
@@ -75,6 +76,10 @@ export default function AdminReviewsPage() {
         return <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20"><Clock className="h-3 w-3 mr-1" /> Pending</Badge>;
     }
   };
+
+  if (isLoading) {
+    return <Loading text="Loading reviews..." />;
+  }
 
   return (
     <Reveal animation="fade-up" className="space-y-6">

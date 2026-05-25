@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { DollarSign, Users, ShoppingCart, PackageSearch } from 'lucide-react';
 import { Reveal } from '@/components/shared/reveal';
 import Link from 'next/link';
+import { Loading } from '@/components/shared/molecules/loading';
 
 export default function DashboardOverviewPage() {
   const [stats, setStats] = useState({
@@ -38,6 +39,10 @@ export default function DashboardOverviewPage() {
     { name: 'Registered Users', value: stats.totalUsers, icon: <Users className="h-6 w-6" />, color: 'text-indigo-600', bg: 'bg-indigo-100', href: '/admin/users' },
   ];
 
+  if (isLoading) {
+    return <Loading text="Loading dashboard stats..." />;
+  }
+
   return (
     <Reveal animation="fade-up" className="space-y-8">
       <div>
@@ -45,27 +50,19 @@ export default function DashboardOverviewPage() {
         <p className="text-muted-foreground mt-1">Welcome back, Admin. Here is what's happening at Nature's Nook Duo today.</p>
       </div>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 glass rounded-2xl animate-pulse bg-muted/50"></div>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {statCards.map((stat, i) => (
-            <Link href={stat.href} key={i} className="group glass rounded-2xl p-6 flex items-center gap-4 border border-border/50 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer block">
-              <div className={`h-14 w-14 rounded-xl flex items-center justify-center shrink-0 ${stat.bg} ${stat.color}`}>
-                {stat.icon}
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground transition-colors group-hover:text-foreground">{stat.name}</p>
-                <h3 className="text-2xl font-bold text-foreground mt-1">{stat.value}</h3>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {statCards.map((stat, i) => (
+          <Link href={stat.href} key={i} className="group glass rounded-2xl p-6 flex items-center gap-4 border border-border/50 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer block">
+            <div className={`h-14 w-14 rounded-xl flex items-center justify-center shrink-0 ${stat.bg} ${stat.color}`}>
+              {stat.icon}
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground transition-colors group-hover:text-foreground">{stat.name}</p>
+              <h3 className="text-2xl font-bold text-foreground mt-1">{stat.value}</h3>
+            </div>
+          </Link>
+        ))}
+      </div>
 
       {/* Quick Actions or Charts could go here */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

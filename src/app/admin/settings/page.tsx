@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { Db } from '@/lib/db';
 import { SystemSettings, UPIId } from '@/types';
+import { Loading } from '@/components/shared/molecules/loading';
 
 import { useRouter } from 'next/navigation';
 
@@ -159,7 +160,9 @@ export default function AdminSettingsPage() {
     });
   };
 
-  if (!settings) return <div className="p-8 text-center text-muted-foreground">Loading settings...</div>;
+  if (!settings) {
+    return <Loading text="Loading settings..." />;
+  }
 
   return (
     <Reveal animation="fade-up" className="space-y-6">

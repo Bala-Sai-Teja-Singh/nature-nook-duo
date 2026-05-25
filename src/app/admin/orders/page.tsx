@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { Db } from '@/lib/db';
 import { cn } from '@/lib/utils';
 import { STATUS_CONFIG, ALL_STATUSES } from '@/constants/statuses';
+import { Loading } from '@/components/shared/molecules/loading';
 
 // Allowed transitions from each status (allows going backward to resolve admin mistakes)
 const STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
@@ -269,6 +270,10 @@ export default function AdminOrdersPage() {
 
   const availableTransitions = selectedOrder ? STATUS_TRANSITIONS[selectedOrder.status] || [] : [];
 
+  if (isLoading) {
+    return <Loading text="Loading orders..." />;
+  }
+
   return (
     <>
       <Reveal animation="fade-up" className="space-y-8">
@@ -322,14 +327,7 @@ export default function AdminOrdersPage() {
                 </tr>
               </thead>
               <tbody>
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                      Loading orders...
-                    </td>
-                  </tr>
-                ) : filteredOrders.length === 0 ? (
+                {filteredOrders.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-12 text-center text-muted-foreground">
                       <ShoppingCart className="h-12 w-12 text-primary/30 mx-auto mb-4" />

@@ -39,7 +39,7 @@ export function Reveal({
   animation = 'fade-up',
   delay = 0,
   duration = 0.6,
-  threshold = 0.1,
+  threshold = 0.02,
   once = true,
   className = '',
   style,
@@ -100,7 +100,7 @@ export function StaggerContainer({
   staggerDelay = 0.1,
   animation = 'fade-up',
   className = '',
-  threshold = 0.08,
+  threshold = 0.01,
 }: StaggerContainerProps) {
   const ref = useRef<HTMLDivElement>(null);
 

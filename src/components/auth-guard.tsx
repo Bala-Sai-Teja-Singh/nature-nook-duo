@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 
+import { Loading } from '@/components/shared/molecules/loading';
+
 interface AuthGuardProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
@@ -33,7 +35,7 @@ export function AuthGuard({ children, requireAdmin = false }: AuthGuardProps) {
     }
   }, [isMounted, isAuthenticated, user, viewMode, requireAdmin, router, pathname]);
 
-  if (!isMounted) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (!isMounted) return <Loading fullScreen text="Verifying authentication..." />;
 
   if (!isAuthenticated) return null;
 

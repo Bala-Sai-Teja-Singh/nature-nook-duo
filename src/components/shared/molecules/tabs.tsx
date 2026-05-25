@@ -58,14 +58,23 @@ export function TabMolecule({
     const el = scrollRef.current;
     if (el) {
       checkScroll();
+      
+      // Use ResizeObserver to check scroll when component or layout sizes change
+      const resizeObserver = new ResizeObserver(() => {
+        checkScroll();
+      });
+      resizeObserver.observe(el);
+
       el.addEventListener('scroll', checkScroll);
       window.addEventListener('resize', checkScroll);
+      
       return () => {
+        resizeObserver.disconnect();
         el.removeEventListener('scroll', checkScroll);
         window.removeEventListener('resize', checkScroll);
       };
     }
-  }, [checkScroll, options]);
+  }, [checkScroll, options, value]);
 
   return (
     <Tabs
@@ -73,7 +82,7 @@ export function TabMolecule({
       onValueChange={onValueChange}
       className={cn("w-full relative group/tabs-molecule", className)}
     >
-      <div className="relative flex items-center justify-start w-full">
+      <div className="relative flex items-center justify-start w-full sm:w-fit overflow-hidden rounded-xl sm:rounded-full">
         {/* Left Shade */}
         <AnimatePresence>
           {showLeftShade && !fullWidth && (
@@ -81,7 +90,7 @@ export function TabMolecule({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute left-0 top-0 bottom-0 w-16 z-20 pointer-events-none bg-gradient-to-r from-background via-background/80 to-transparent rounded-l-xl sm:rounded-l-full"
+              className="absolute left-0 top-0 bottom-0 w-12 z-20 pointer-events-none bg-gradient-to-r from-background via-background/70 to-transparent rounded-l-xl sm:rounded-l-full"
             />
           )}
         </AnimatePresence>
@@ -125,7 +134,7 @@ export function TabMolecule({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute right-0 top-0 bottom-0 w-12 z-20 pointer-events-none bg-gradient-to-l from-background via-background/50 to-transparent rounded-r-xl sm:rounded-r-full"
+              className="absolute right-0 top-0 bottom-0 w-12 z-20 pointer-events-none bg-gradient-to-l from-background via-background/70 to-transparent rounded-r-xl sm:rounded-r-full"
             />
           )}
         </AnimatePresence>

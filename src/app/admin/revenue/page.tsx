@@ -17,6 +17,7 @@ import type { Order } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { TabMolecule, type TabOption } from '@/components/shared/molecules/tabs';
 import { SectionHeader } from '@/components/shared/molecules/section-header';
+import { Loading } from '@/components/shared/molecules/loading';
 
 const REVENUE_CATEGORIES: TabOption[] = [
   { value: 'all', label: 'All', icon: DollarSign },
@@ -44,9 +45,11 @@ export default function AdminRevenuePage() {
     total: 0,
     products: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       // We are directly fetching the aggregated revenues table which already filters by active revenues
       const revenues = await Db.getAll<{
         id: string;
@@ -88,6 +91,7 @@ export default function AdminRevenuePage() {
         total: allItems.reduce((acc, curr) => acc + curr.amount, 0),
         products: allItems.filter(i => i.type === 'product').reduce((acc, curr) => acc + curr.amount, 0),
       });
+      setIsLoading(false);
     })();
   }, []);
 
@@ -172,6 +176,10 @@ export default function AdminRevenuePage() {
     const fileName = `revenue-report-${filterType}-${new Date().toISOString().split('T')[0]}.pdf`;
     doc.save(fileName);
   };
+
+  if (isLoading) {
+    return <Loading text="Loading financial records..." />;
+  }
 
   return (
     <Reveal animation="fade-up" className="space-y-6">

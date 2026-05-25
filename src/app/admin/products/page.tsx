@@ -19,6 +19,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Loading } from '@/components/shared/molecules/loading';
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types';
 import { useToast } from '@/hooks/use-toast';
@@ -204,6 +205,10 @@ export default function AdminProductsPage() {
 
   const selectedCategoryData = categories.find(c => c.name === formData.mainCategory || c.id === formData.mainCategory);
 
+  if (isLoading) {
+    return <Loading text="Loading products..." />;
+  }
+
   return (
     <Reveal animation="fade-up" className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -260,14 +265,7 @@ export default function AdminProductsPage() {
               </tr>
             </thead>
             <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={5} className="p-8 text-center text-muted-foreground">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                    Loading products...
-                  </td>
-                </tr>
-              ) : products.length === 0 ? (
+              {products.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-12 text-center text-muted-foreground">
                     <Leaf className="h-12 w-12 text-primary/30 mx-auto mb-4" />

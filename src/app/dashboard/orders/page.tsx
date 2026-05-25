@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/use-auth';
 import { AuthGuard } from '@/components/auth-guard';
 import { EmptyState } from '@/components/shared/molecules/empty-state';
+import { Loading } from '@/components/shared/molecules/loading';
 import type { Order } from '@/types';
 import { cn } from '@/lib/utils';
 import { Reveal, StaggerContainer } from '@/components/shared/reveal';
@@ -66,8 +67,8 @@ function OrdersContent() {
         </Reveal>
         
         {isLoading ? (
-          <div className="glass rounded-3xl p-12 flex justify-center border border-border/50">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div className="glass rounded-3xl p-12 flex justify-center border border-border/50 bg-background/30">
+            <Loading text="Loading your orders..." />
           </div>
         ) : orders.length === 0 ? (
           <EmptyState

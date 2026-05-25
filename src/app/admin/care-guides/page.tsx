@@ -14,11 +14,13 @@ import { Modal } from '@/components/shared/molecules/modal';
 import { Db } from '@/lib/db';
 import type { CareGuide } from '@/types';
 import { SectionHeader } from '@/components/shared/molecules/section-header';
+import { Loading } from '@/components/shared/molecules/loading';
 
 export default function AdminCareGuidesPage() {
   const [guides, setGuides] = useState<CareGuide[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +34,9 @@ export default function AdminCareGuidesPage() {
 
   useEffect(() => {
     (async () => {
+      setIsPageLoading(true);
       setGuides(await Db.getAll<CareGuide>('care_guides'));
+      setIsPageLoading(false);
     })();
   }, []);
 
@@ -87,6 +91,10 @@ export default function AdminCareGuidesPage() {
       toast.success('Care guide deleted');
     }
   };
+
+  if (isPageLoading) {
+    return <Loading text="Loading care guides..." />;
+  }
 
   return (
     <Reveal animation="fade-up" className="space-y-6">
