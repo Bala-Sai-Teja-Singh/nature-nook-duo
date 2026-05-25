@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const subtotal = items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
     
     const recipientEmail = IS_SANDBOX_MODE ? TEST_EMAIL : userEmail;
-    const senderEmail = IS_SANDBOX_MODE ? 'ArachnidsArk <onboarding@resend.dev>' : 'ArachnidsArk <orders@arachnidsark.com>';
+    const senderEmail = IS_SANDBOX_MODE ? "Nature's Nook Duo <onboarding@resend.dev>" : "Nature's Nook Duo <orders@naturesnookduo.com>";
     const adminNotificationEmail = adminEmail || TEST_EMAIL;
 
      
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; color: #333;">
         <h2 style="color: #b7791f;">Order Updated - #${orderId.split('-')[0]}</h2>
         <p>Hello ${userName},</p>
-        <p>Your order with <strong>ArachnidsArk</strong> has been updated by our team.</p>
+        <p>Your order with <strong>Nature's Nook Duo</strong> has been updated by our team.</p>
         
         ${changeSummary ? `
         <div style="background: #fdfcea; border: 1px solid #fbd38d; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
         </p>
 
         <p style="margin-top: 30px; font-size: 12px; color: #999; text-align: center;">
-          ArachnidsArk - Quality Exotics & Supplies<br>
+          Nature's Nook Duo - Quality Exotics & Supplies<br>
           This is an automated message.
         </p>
       </div>
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
       to: [recipientEmail],
       bcc: [adminNotificationEmail],
       replyTo: adminNotificationEmail,
-      subject: `Order Updated #${orderId.split('-')[0]} - ArachnidsArk`,
+      subject: `Order Updated #${orderId.split('-')[0]} - Nature's Nook Duo`,
       html: emailHtml,
     });
 

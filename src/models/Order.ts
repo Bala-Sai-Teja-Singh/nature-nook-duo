@@ -44,7 +44,6 @@ const orderSchema = new Schema(
       enum: ['pending', 'awaiting_payment', 'payment_verified', 'order_shipped', 'order_completed', 'order_cancelled'],
       default: 'pending',
     },
-    paymentScreenshot: { type: String },
     adminNote: { type: String },
     deliveryName: { type: String },
     deliveryPhone: { type: String },

@@ -160,7 +160,6 @@ export interface Order {
   items: OrderItem[];
   message: string;
   status: OrderStatus;
-  paymentScreenshot?: string;
   adminNote?: string;
   deliveryName: string;
   deliveryPhone: string;

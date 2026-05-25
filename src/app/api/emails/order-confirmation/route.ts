@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     
     // Determine recipient based on Sandbox mode
     const recipientEmail = IS_SANDBOX_MODE ? TEST_EMAIL : userEmail;
-    const senderEmail = IS_SANDBOX_MODE ? 'ArachnidsArk <onboarding@resend.dev>' : 'ArachnidsArk <orders@arachnidsark.com>';
+    const senderEmail = IS_SANDBOX_MODE ? "Nature's Nook Duo <onboarding@resend.dev>" : "Nature's Nook Duo <orders@naturesnookduo.com>";
     const adminNotificationEmail = adminEmail || TEST_EMAIL;
     const { upiIds, bankDetails, paymentInstructions } = paymentDetails;
 
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; color: #333;">
         <h2 style="color: #c53030;">Order Confirmation - #${orderId.split('-')[0]}</h2>
         <p>Hello ${userName},</p>
-        <p>Thank you for your order with <strong>ArachnidsArk</strong>! Your order request has been received and is currently being processed.</p>
+        <p>Thank you for your order with <strong>Nature's Nook Duo</strong>! Your order request has been received and is currently being processed.</p>
         
         <h3 style="border-bottom: 2px solid #eee; padding-bottom: 5px;">Order Summary</h3>
         <table style="width: 100%; border-collapse: collapse;">
@@ -105,7 +105,7 @@ export async function POST(req: Request) {
         </div>
 
         <p style="margin-top: 30px; font-size: 12px; color: #999; text-align: center;">
-          ArachnidsArk - Quality Exotics & Supplies<br>
+          Nature's Nook Duo - Quality Exotics & Supplies<br>
           This is an automated message. Please reply to this email for any queries.
         </p>
       </div>
@@ -116,7 +116,7 @@ export async function POST(req: Request) {
       to: [recipientEmail],
       bcc: [adminNotificationEmail],
       replyTo: adminNotificationEmail,
-      subject: `Order Confirmation #${orderId.split('-')[0]} - ArachnidsArk`,
+      subject: `Order Confirmation #${orderId.split('-')[0]} - Nature's Nook Duo`,
       html: emailHtml,
     });
 

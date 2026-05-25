@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
     ],
+    localPatterns: [
+      {
+        pathname: '/api/image-proxy',
+      },
+      {
+        pathname: '/images/**',
+      },
+    ],
   },
 };
 

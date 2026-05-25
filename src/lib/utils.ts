@@ -22,3 +22,16 @@ export const getProxiedImageUrl = (url: string | undefined | null): string => {
   // Proxy ALL other external images to bypass CORS and Referrer blocks
   return `/api/image-proxy?url=${encodeURIComponent(url)}`;
 };
+
+export const getOriginalImageUrl = (url: string | undefined | null): string => {
+  if (!url) return '';
+  if (url.includes('/api/image-proxy?url=')) {
+    const original = decodeURIComponent(url.split('/api/image-proxy?url=')[1]);
+    const driveMatch = original.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/);
+    if (driveMatch && driveMatch[1]) {
+      return `https://drive.google.com/file/d/${driveMatch[1]}/view`;
+    }
+    return original;
+  }
+  return url;
+};

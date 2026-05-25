@@ -39,10 +39,11 @@ function OrdersContent() {
   const getStatusConfig = (status: string) => {
     switch(status) {
       case 'pending':
+        return { color: 'bg-yellow-100 text-yellow-800 border-yellow-200', icon: <Clock className="h-4 w-4" />, label: 'Pending Review' };
       case 'awaiting_payment':
-        return { color: 'bg-yellow-100 text-yellow-800 border-yellow-200', icon: <Clock className="h-4 w-4" />, label: 'Pending' };
+        return { color: 'bg-orange-100 text-orange-800 border-orange-200', icon: <Clock className="h-4 w-4" />, label: 'Awaiting Payment' };
       case 'payment_verified':
-        return { color: 'bg-blue-100 text-blue-800 border-blue-200', icon: <CheckCircle2 className="h-4 w-4" />, label: 'Confirmed' };
+        return { color: 'bg-blue-100 text-blue-800 border-blue-200', icon: <CheckCircle2 className="h-4 w-4" />, label: 'Payment Verified' };
       case 'order_shipped':
         return { color: 'bg-indigo-100 text-indigo-800 border-indigo-200', icon: <Truck className="h-4 w-4" />, label: 'Shipped' };
       case 'order_completed':

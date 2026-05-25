@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingCart, Heart, ShieldCheck } from 'lucide-react';
@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useFavoriteStore } from '@/store/favorite-store';
 import { useAuthStore } from '@/store/auth-store';
 import type { Product } from '@/types';
+import { getProxiedImageUrl } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -25,6 +26,15 @@ export function ProductCard({ product }: ProductCardProps) {
   
   const [showSizeModal, setShowSizeModal] = useState(false);
   const [selectedSizeIdx, setSelectedSizeIdx] = useState(0);
+  const [currentImgIdx, setCurrentImgIdx] = useState(0);
+
+  useEffect(() => {
+    if (!product.images || product.images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImgIdx((prev) => (prev + 1) % product.images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [product.images]);
   
   const liked = isLiked(product.id, 'product');
 
@@ -103,12 +113,18 @@ export function ProductCard({ product }: ProductCardProps) {
         
         {/* Image Container */}
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-          {product.images?.[0] ? (
-            <img
-              src={product.images[0]}
-              alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
+          {product.images && product.images.length > 0 ? (
+            product.images.map((img, idx) => (
+              <img
+                key={idx}
+                src={getProxiedImageUrl(img)}
+                alt={`${product.name} ${idx + 1}`}
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out group-hover:scale-105 ${
+                  idx === currentImgIdx ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                }`}
+                style={{ transitionProperty: 'opacity, transform' }}
+              />
+            ))
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
               No Image
@@ -191,7 +207,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="space-y-4" onClick={(e) => e.preventDefault()}>
           <div className="flex gap-4 items-center mb-4">
             <div className="h-16 w-16 rounded-lg overflow-hidden border border-border bg-muted">
-              {product.images?.[0] && <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />}
+              {product.images?.[0] && <img src={getProxiedImageUrl(product.images[0])} alt={product.name} className="h-full w-full object-cover" />}
             </div>
             <div>
               <h4 className="font-bold uppercase tracking-tight line-clamp-1">{product.name}</h4>

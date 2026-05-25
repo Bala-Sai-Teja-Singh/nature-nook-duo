@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const { id: orderId, userName, userEmail, trackingId, courierPartner } = order;
     
     const recipientEmail = IS_SANDBOX_MODE ? TEST_EMAIL : userEmail;
-    const senderEmail = IS_SANDBOX_MODE ? 'ArachnidsArk <onboarding@resend.dev>' : 'ArachnidsArk <orders@arachnidsark.com>';
+    const senderEmail = IS_SANDBOX_MODE ? "Nature's Nook Duo <onboarding@resend.dev>" : "Nature's Nook Duo <orders@naturesnookduo.com>";
     const adminNotificationEmail = adminEmail || TEST_EMAIL;
 
     const emailHtml = `
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         <p style="margin-top: 25px;">Ensure someone is available at the delivery address to receive the package. For live species, please follow the unboxing instructions provided on our website to ensure their safety.</p>
 
         <p style="margin-top: 30px; font-size: 12px; color: #999; text-align: center;">
-          ArachnidsArk - Quality Exotics & Supplies<br>
+          Nature's Nook Duo - Quality Exotics & Supplies<br>
           This is an automated message. Please reply to this email for any queries.
         </p>
       </div>
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       to: [recipientEmail],
       bcc: [adminNotificationEmail],
       replyTo: adminNotificationEmail,
-      subject: `Your Order #${orderId.split('-')[0]} has been Shipped! - ArachnidsArk`,
+      subject: `Your Order #${orderId.split('-')[0]} has been Shipped! - Nature's Nook Duo`,
       html: emailHtml,
     });
 

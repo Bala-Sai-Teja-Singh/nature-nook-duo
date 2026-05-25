@@ -94,7 +94,7 @@ export default async function HomePage() {
               </div>
               <div>
                 <h4 className="font-semibold text-foreground">Safe Transport</h4>
-                <p className="text-sm text-muted-foreground">Overnight live shipping</p>
+                <p className="text-sm text-muted-foreground">Safe & secure live transport</p>
               </div>
             </div>
             <div className="flex flex-col items-center text-center space-y-3">

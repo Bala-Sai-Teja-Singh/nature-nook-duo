@@ -44,8 +44,6 @@ const cartSchema = new Schema(
   }
 );
 
-cartSchema.index({ userId: 1 }, { unique: true });
-
 export const CartModel =
   (mongoose.models.Cart as mongoose.Model<typeof cartSchema extends Schema<infer T> ? T : never>) ||
   mongoose.model('Cart', cartSchema);

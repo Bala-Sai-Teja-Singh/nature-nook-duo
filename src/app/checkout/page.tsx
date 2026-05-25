@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ShieldCheck, Truck, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Truck, ArrowLeft, CheckCircle2, Mail, Banknote, Info } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/use-cart';
@@ -11,9 +11,11 @@ import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Reveal } from '@/components/shared/reveal';
+import { Db } from '@/lib/db';
+import type { SystemSettings } from '@/types';
 
 export default function CheckoutPage() {
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice, totalItems, clearCart } = useCart();
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
@@ -22,6 +24,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [settings, setSettings] = useState<SystemSettings | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -45,7 +48,28 @@ export default function CheckoutPage() {
         phone: user.phone || ''
       }));
     }
+    // Fetch system settings for shipping rules
+    (async () => {
+      const s = await Db.getSettings<SystemSettings>('system_settings');
+      if (s) setSettings(s);
+    })();
   }, [user]);
+
+  // Calculate shipping charge based on quantity rules from settings
+  const shippingCharge = useMemo(() => {
+    const qty = totalItems();
+    if (!settings?.shippingSettings?.rules || settings.shippingSettings.rules.length === 0 || qty === 0) return 0;
+    const rules = settings.shippingSettings.rules;
+    // Find matching rule by quantity
+    const matched = rules.find(r => qty >= r.minQuantity && qty <= r.maxQuantity);
+    if (matched) return matched.charge;
+    // If quantity exceeds all rules, use the highest rule
+    const sorted = [...rules].sort((a, b) => b.maxQuantity - a.maxQuantity);
+    return sorted[0]?.charge || 0;
+  }, [settings, totalItems]);
+
+  const shippingDisclaimer = settings?.shippingSettings?.disclaimer || 'Shipping charges may vary based on seasonal conditions.';
+  const orderTotal = totalPrice() + shippingCharge;
 
   // Redirect if cart is empty and not just placed an order
   useEffect(() => {
@@ -83,8 +107,8 @@ export default function CheckoutPage() {
           type: 'product',
           metadata: { size: item.metadata?.size }
         })),
-        totalPrice: totalPrice(),
-        shippingCharge: 0, // Simplified for now
+        totalPrice: orderTotal,
+        shippingCharge,
       };
 
       const res = await fetch('/api/db/orders', {
@@ -129,13 +153,19 @@ export default function CheckoutPage() {
           <div className="h-24 w-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 animate-success-burst">
             <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" />
           </div>
-          <h1 className="font-heading text-4xl font-bold mb-4 text-foreground">Order Successful!</h1>
-          <p className="text-lg text-muted-foreground mb-8">
-            Thank you for choosing Nature&apos;s Nook Duo. Your order <span className="font-bold text-foreground">#{orderId.substring(0, 8)}</span> has been securely placed. We will contact you shortly to coordinate safe transport.
+          <h1 className="font-heading text-4xl font-bold mb-4 text-foreground">Order Placed!</h1>
+          <p className="text-lg text-muted-foreground mb-4">
+            Thank you for choosing Nature&apos;s Nook Duo. Your order <span className="font-bold text-foreground">#{orderId.substring(0, 8)}</span> has been received.
           </p>
+          <div className="flex items-center gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl px-6 py-4 mb-8 text-left">
+            <Mail className="h-6 w-6 text-amber-600 dark:text-amber-400 shrink-0" />
+            <p className="text-sm text-amber-800 dark:text-amber-300">
+              Our team will verify your order and send you an email with <strong>payment details (UPI / Bank Transfer)</strong>. Please complete the payment and reply to that email with a screenshot of your transaction.
+            </p>
+          </div>
           <div className="flex gap-4">
             {isAuthenticated && (
-              <Link href="/orders" className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-full" })}>
+              <Link href="/dashboard/orders" className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-full" })}>
                 View Orders
               </Link>
             )}
@@ -195,7 +225,7 @@ export default function CheckoutPage() {
                   <Input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <label className="text-sm font-medium text-foreground">Phone Number (Required for live delivery)</label>
+                  <label className="text-sm font-medium text-foreground">Phone Number (Required for delivery coordination)</label>
                   <Input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="h-12 rounded-xl bg-background/50" />
                 </div>
                 <div className="space-y-2 md:col-span-2">
@@ -233,16 +263,17 @@ export default function CheckoutPage() {
             <Reveal animation="fade-up" delay={0.2}>
             <div className="glass rounded-2xl p-6 md:p-8 border border-border/50">
                <h2 className="font-heading text-2xl font-bold mb-6 border-b border-border/50 pb-4">Payment Method</h2>
-               <div className="p-4 rounded-xl border-2 border-primary/20 bg-primary/5 flex items-center justify-between">
-                 <div className="flex items-center gap-3">
-                   <div className="h-4 w-4 rounded-full bg-primary ring-4 ring-primary/20" />
-                   <span className="font-medium text-foreground">Secure Payment Gateway</span>
+               <div className="p-4 rounded-xl border-2 border-amber-300/40 bg-amber-50/50 dark:bg-amber-900/10 dark:border-amber-800/40 flex items-start gap-4">
+                 <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                   <Banknote className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                  </div>
-                 <ShieldCheck className="h-6 w-6 text-primary" />
+                 <div className="space-y-2">
+                   <span className="font-semibold text-foreground block">Offline Payment (UPI / Bank Transfer)</span>
+                   <p className="text-sm text-muted-foreground leading-relaxed">
+                     After placing your order, our team will verify it and send you an email with payment details. Complete the payment and reply to the email with a screenshot of your transaction.
+                   </p>
+                 </div>
                </div>
-               <p className="text-sm text-muted-foreground mt-4 italic">
-                 (Demo environment: Clicking Place Order will create a pending order directly)
-               </p>
             </div>
             </Reveal>
           </div>
@@ -274,15 +305,19 @@ export default function CheckoutPage() {
                   <span className="text-muted-foreground">Subtotal</span>
                   <span className="font-medium">₹{totalPrice().toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-primary">
-                  <span>Shipping (Overnight Live)</span>
-                  <span className="font-medium">Free</span>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Shipping</span>
+                  <span className="font-medium">{shippingCharge > 0 ? `₹${shippingCharge.toFixed(2)}` : 'Free'}</span>
+                </div>
+                <div className="flex items-start gap-1.5 text-xs text-muted-foreground/80 pt-1">
+                  <Info className="h-3 w-3 mt-0.5 shrink-0" />
+                  <span>{shippingDisclaimer}</span>
                 </div>
               </div>
               
               <div className="border-t border-border/50 mt-4 pt-4 flex justify-between items-end mb-8">
                 <span className="text-lg font-bold">Total to Pay</span>
-                <span className="text-3xl font-bold text-primary">₹{totalPrice().toFixed(2)}</span>
+                <span className="text-3xl font-bold text-primary">₹{orderTotal.toFixed(2)}</span>
               </div>
               
               <Button 

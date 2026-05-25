@@ -296,8 +296,10 @@ const Modal = React.forwardRef<
       large: 'w-[95vw] sm:w-[850px] max-w-[95vw]',
       'extra-large': 'w-[95vw] sm:w-[1150px] max-w-[95vw]',
       'side-drawer': 'w-[85vw] sm:w-[400px] h-full',
-      'side-left': 'w-[80vw] sm:w-[320px] h-full left-0',
-      'side-right': 'w-[80vw] sm:w-[320px] h-full right-0',
+      'side-drawer-left': 'w-[85vw] sm:w-[400px] h-full left-0 right-auto',
+      'side-drawer-right': 'w-[85vw] sm:w-[400px] h-full right-0 left-auto',
+      'side-left': 'w-[80vw] sm:w-[320px] h-full left-0 right-auto',
+      'side-right': 'w-[80vw] sm:w-[320px] h-full right-0 left-auto',
       'half-screen': 'w-[50vw] h-full right-0',
       'full-screen': 'w-full h-full inset-0',
       'full': 'w-full h-full inset-0',
@@ -325,7 +327,7 @@ const Modal = React.forwardRef<
               }
               contentRef.current = node as HTMLDivElement | null;
             }}
-            className={cn('fixed top-0 h-full flex flex-col', widthClass, baseContent, size.includes('left') ? 'left-0' : 'right-0')}
+            className={cn('fixed top-0 h-full flex flex-col', widthClass, baseContent, size.includes('left') ? 'left-0 right-auto' : 'right-0 left-auto')}
             style={{
               ...sideStyle,
               width: size === 'second-modal' && !isMobile ? (secondModalWidth ?? calculatedSecondModalWidth ?? undefined) : undefined,

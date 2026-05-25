@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingCart, Menu, User as UserIcon, Search, Leaf, LogOut, LayoutDashboard, Heart, Package, Store, ShoppingBag, BookOpen, X, Trash2 } from 'lucide-react';
+import { ShoppingCart, Menu, User as UserIcon, Search, Leaf, LogOut, LayoutDashboard, Heart, Package, Store, ShoppingBag, BookOpen, X, Trash2, Bell } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart';
 import { useAuth } from '@/hooks/use-auth';
 import { useUiStore } from '@/store/ui-store';
@@ -17,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { useNotificationStore } from '@/store/notification-store';
+import { NotificationCenter } from '@/components/shared/notification-center';
 
 export function Navbar() {
   const { items, totalPrice, totalItems, updateQuantity, removeItem } = useCart();
@@ -24,6 +26,14 @@ export function Navbar() {
   const { setAdminSidebarOpen } = useUiStore();
   const pathname = usePathname();
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { unreadCount, loadNotifications } = useNotificationStore();
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      loadNotifications(user.id);
+    }
+  }, [user, loadNotifications]);
 
   if (pathname === '/login') {
     return null;
@@ -125,7 +135,7 @@ export function Navbar() {
 
               <ThemeToggle />
 
-              {isAuthenticated && (
+              {isAuthenticated && !pathname.startsWith('/admin') && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -136,6 +146,22 @@ export function Navbar() {
                   {totalItems() > 0 && (
                     <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-accent text-accent-foreground p-0 text-[10px]">
                       {totalItems()}
+                    </Badge>
+                  )}
+                </Button>
+              )}
+
+              {isAuthenticated && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowNotifications(true)}
+                  className="relative group outline-none text-foreground/80 hover:text-primary"
+                >
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-primary text-primary-foreground p-0 text-[10px] badge-animate">
+                      {unreadCount}
                     </Badge>
                   )}
                 </Button>
@@ -332,6 +358,7 @@ export function Navbar() {
           </div>
         </div>
       )}
+      <NotificationCenter open={showNotifications} onOpenChange={setShowNotifications} />
     </>
   );
 }

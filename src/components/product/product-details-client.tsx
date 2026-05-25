@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Heart, ShieldCheck, Leaf, Star, Check, ChevronLeft } from 'lucide-react';
+import { ShoppingCart, Heart, ShieldCheck, Leaf, Star, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/use-cart';
@@ -12,12 +12,22 @@ import { useFavoriteStore } from '@/store/favorite-store';
 import { useAuthStore } from '@/store/auth-store';
 import { EmptyState } from '@/components/shared/molecules/empty-state';
 import type { Product, Review, ProductSize } from '@/types';
-import { cn } from '@/lib/utils';
+import { cn, getProxiedImageUrl } from '@/lib/utils';
 
 export function ProductDetailsClient({ product, initialReviews }: { product: Product; initialReviews: Review[] }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(product.sizes?.[0] || null);
   const [quantity, setQuantity] = useState(1);
+
+  const handlePrevImage = () => {
+    if (!product.images || product.images.length <= 1) return;
+    setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
+  };
+
+  const handleNextImage = () => {
+    if (!product.images || product.images.length <= 1) return;
+    setSelectedImage((prev) => (prev + 1) % product.images.length);
+  };
   const { addItem } = useCart();
   const { toast } = useToast();
   const { toggleLike, isLiked } = useFavoriteStore();
@@ -75,7 +85,7 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
           <div className="relative aspect-square w-full rounded-3xl overflow-hidden glass shadow-xl border border-border/50">
             {product.images?.[selectedImage] ? (
               <img
-                src={product.images[selectedImage]}
+                src={getProxiedImageUrl(product.images[selectedImage])}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
@@ -83,6 +93,27 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
               <div className="absolute inset-0 flex items-center justify-center bg-muted">
                 <Leaf className="h-20 w-20 text-muted-foreground/30" />
               </div>
+            )}
+            
+            {product.images && product.images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); handlePrevImage(); }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground/80 hover:text-foreground h-10 w-10 rounded-full flex items-center justify-center border border-border shadow-md backdrop-blur-sm transition-all active:scale-95 z-10 cursor-pointer"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); handleNextImage(); }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground/80 hover:text-foreground h-10 w-10 rounded-full flex items-center justify-center border border-border shadow-md backdrop-blur-sm transition-all active:scale-95 z-10 cursor-pointer"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </>
             )}
             
             <div className="absolute top-4 left-4 flex gap-2">
@@ -106,7 +137,7 @@ export function ProductDetailsClient({ product, initialReviews }: { product: Pro
                     selectedImage === idx ? "border-primary opacity-100 ring-2 ring-primary/20 ring-offset-2" : "border-transparent opacity-60 hover:opacity-100"
                   )}
                 >
-                  <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
+                  <img src={getProxiedImageUrl(img)} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

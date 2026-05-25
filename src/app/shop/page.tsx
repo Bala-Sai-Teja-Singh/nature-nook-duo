@@ -115,20 +115,29 @@ export default async function ProductsPage(props: {
           
           <div className="glass rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
             
-            {/* Category Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto">
-              <Link href={`/shop${q ? `?q=${q}` : ''}`} className={`px-5 py-2.5 h-10 rounded-full font-heading text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 ${!categoryFilter ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}>
-                All
-              </Link>
-              {categories.map(cat => (
-                <Link 
-                  key={cat.id} 
-                  href={`/shop?category=${cat.name}${q ? `&q=${q}` : ''}`}
-                  className={`px-5 py-2.5 h-10 rounded-full font-heading text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 ${categoryFilter === cat.name ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
-                >
-                  {cat.name}
+            {/* Category Tabs with horizontal scroll indicator */}
+            <div className="relative w-full md:w-auto overflow-hidden">
+              {/* Left Fade Overlay */}
+              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10 md:hidden" />
+              
+              {/* Right Fade Overlay */}
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10 md:hidden" />
+              
+              {/* Scrollable Tabs Container */}
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full pr-8 md:pr-0 pb-1">
+                <Link href={`/shop${q ? `?q=${q}` : ''}`} className={`px-5 py-2.5 h-10 rounded-full font-heading text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 ${!categoryFilter ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}>
+                  All
                 </Link>
-              ))}
+                {categories.map(cat => (
+                  <Link 
+                    key={cat.id} 
+                    href={`/shop?category=${cat.name}${q ? `&q=${q}` : ''}`}
+                    className={`px-5 py-2.5 h-10 rounded-full font-heading text-[10px] uppercase tracking-widest font-bold transition-all whitespace-nowrap flex-shrink-0 ${categoryFilter === cat.name ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Search */}

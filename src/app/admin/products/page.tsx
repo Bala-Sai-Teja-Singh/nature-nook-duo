@@ -37,6 +37,7 @@ import {
 import { Db } from '@/lib/db';
 import type { Category } from '@/types';
 import { Reveal } from '@/components/shared/reveal';
+import { getProxiedImageUrl, getOriginalImageUrl } from '@/lib/utils';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -81,7 +82,7 @@ export default function AdminProductsPage() {
       breed: product.breed,
       mainCategory: typeof product.mainCategory === 'string' ? product.mainCategory : (product.mainCategory as any).name,
       description: product.description,
-      images: product.images,
+      images: (product.images || []).map(img => getOriginalImageUrl(img)),
       isVisible: product.isVisible,
       customMeta: product.customMeta || {},
       careLevel: product.careLevel,
@@ -150,7 +151,7 @@ export default function AdminProductsPage() {
             name: formData.name,
             breed: formData.breed || formData.name,
             mainCategory: formData.mainCategory,
-            images: formData.images || [],
+            images: (formData.images || []).map(img => getProxiedImageUrl(img)),
             description: formData.description || '',
             customMeta: formData.customMeta || {},
             careLevel: formData.careLevel || editingProduct.careLevel || 'beginner',
@@ -176,7 +177,7 @@ export default function AdminProductsPage() {
             name: formData.name,
             breed: formData.breed || formData.name,
             mainCategory: formData.mainCategory,
-            images: formData.images || [],
+            images: (formData.images || []).map(img => getProxiedImageUrl(img)),
             description: formData.description || '',
             customMeta: formData.customMeta || {},
             careLevel: formData.careLevel || 'beginner',
@@ -213,7 +214,7 @@ export default function AdminProductsPage() {
         <Button className="rounded-xl shadow-md h-12 px-6" onClick={() => {
           setEditingProduct(null);
           setFormData({
-            name: '', breed: '', mainCategory: '', description: '', isVisible: true, customMeta: {}
+            name: '', breed: '', mainCategory: '', description: '', isVisible: true, customMeta: {}, images: ['']
           });
           setIsModalOpen(true);
         }}>
@@ -291,7 +292,7 @@ export default function AdminProductsPage() {
                       <div className="flex items-center gap-4">
                         <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted shrink-0 border border-border/50">
                           {product.images?.[0] ? (
-                            <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                            <img src={getProxiedImageUrl(product.images[0])} alt={product.name} className="w-full h-full object-cover" />
                           ) : (
                             <PackageSearch className="h-5 w-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-muted-foreground/50" />
                           )}
@@ -406,12 +407,48 @@ export default function AdminProductsPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label>Image URL</Label>
-            <Input
-              value={formData.images?.[0] || ''}
-              onChange={e => setFormData({ ...formData, images: [e.target.value] })}
-              placeholder="https://example.com/image.jpg"
-            />
+            <div className="flex items-center justify-between">
+              <Label>Image URLs</Label>
+              <Button 
+                type="button"
+                variant="outline" 
+                size="sm" 
+                className="h-7 text-[10px] uppercase tracking-widest" 
+                onClick={() => setFormData({ ...formData, images: [...(formData.images || []), ''] })}
+              >
+                Add Image URL
+              </Button>
+            </div>
+            <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+              {(formData.images && formData.images.length > 0 ? formData.images : ['']).map((img, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <Input
+                    value={img}
+                    onChange={e => {
+                      const newImages = [...(formData.images && formData.images.length > 0 ? formData.images : [''])];
+                      newImages[idx] = e.target.value;
+                      setFormData({ ...formData, images: newImages });
+                    }}
+                    placeholder={`https://example.com/image${idx + 1}.jpg`}
+                    className="flex-1"
+                  />
+                  {(formData.images && formData.images.length > 1) && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-10 w-10 text-red-400 hover:text-red-300 hover:bg-red-400/5 shrink-0"
+                      onClick={() => {
+                        const newImages = (formData.images || []).filter((_, i) => i !== idx);
+                        setFormData({ ...formData, images: newImages });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="space-y-2">
             <Label>Description</Label>

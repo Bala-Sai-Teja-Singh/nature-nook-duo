@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const { id: orderId, userName, userEmail, cancellationReason } = order;
     
     const recipientEmail = IS_SANDBOX_MODE ? TEST_EMAIL : userEmail;
-    const senderEmail = IS_SANDBOX_MODE ? 'ArachnidsArk <onboarding@resend.dev>' : 'ArachnidsArk <orders@arachnidsark.com>';
+    const senderEmail = IS_SANDBOX_MODE ? "Nature's Nook Duo <onboarding@resend.dev>" : "Nature's Nook Duo <orders@naturesnookduo.com>";
     const adminNotificationEmail = adminEmail || TEST_EMAIL;
 
     const emailHtml = `
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         <p style="margin-top: 20px;">We apologize for any inconvenience this may have caused. If you have any questions, please reply to this email.</p>
 
         <p style="margin-top: 30px; font-size: 12px; color: #999; text-align: center;">
-          ArachnidsArk - Quality Exotics & Supplies<br>
+          Nature's Nook Duo - Quality Exotics & Supplies<br>
           This is an automated message. Please reply to this email for any queries.
         </p>
       </div>
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       to: [recipientEmail],
       bcc: [adminNotificationEmail],
       replyTo: adminNotificationEmail,
-      subject: `Order Update #${orderId.split('-')[0]} - ArachnidsArk`,
+      subject: `Order Update #${orderId.split('-')[0]} - Nature's Nook Duo`,
       html: emailHtml,
     });
 
