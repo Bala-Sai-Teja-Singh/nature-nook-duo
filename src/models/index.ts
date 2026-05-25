@@ -9,3 +9,4 @@ export { ReviewModel } from './Review';
 export { CareGuideModel } from './CareGuide';
 export { FavoriteModel } from './Favorite';
 export { NotificationModel } from './Notification';
+export { CartModel } from './Cart';

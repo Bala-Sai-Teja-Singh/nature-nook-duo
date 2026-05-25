@@ -27,6 +27,7 @@ const COLLECTION_MAP: Record<string, string> = {
   system_settings: 'system-settings',
   coupons: 'coupons',
   categories: 'categories',
+  carts: 'carts',
 };
 
 function ep(collection: string): string {

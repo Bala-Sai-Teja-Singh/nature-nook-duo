@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware';
 import type { User, SafeUser, UserRole } from '@/types';
 import { DbClient } from '@/lib/db-client';
 import { useFavoriteStore } from './favorite-store';
+import { useCartStore } from './cart-store';
 
 interface AuthState {
   user: SafeUser | null;
@@ -45,8 +46,9 @@ export const useAuthStore = create<AuthState>()(
 
         const viewMode = result.user.role === 'admin' ? 'admin' : 'user';
         set({ user: result.user, isAuthenticated: true, isLoading: false, viewMode });
-        // Load favorites
+        // Load favorites and cart
         useFavoriteStore.getState().loadFavorites(result.user.id);
+        useCartStore.getState().loadCartFromDb(result.user.id);
         return { success: true, role: result.user.role };
       },
 
@@ -70,8 +72,9 @@ export const useAuthStore = create<AuthState>()(
            
           const { password: _password, ...safeUser } = created as User & { password?: string };
           set({ user: safeUser as SafeUser, isAuthenticated: true, isLoading: false, viewMode: 'user' });
-          // Load favorites
+          // Load favorites and cart
           useFavoriteStore.getState().loadFavorites(safeUser.id);
+          useCartStore.getState().loadCartFromDb(safeUser.id);
           return { success: true, role: safeUser.role };
         } catch {
           set({ isLoading: false });
@@ -82,6 +85,7 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         set({ user: null, isAuthenticated: false, viewMode: 'admin' });
         useFavoriteStore.getState().clearFavorites();
+        useCartStore.getState().setUserId(null);
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }

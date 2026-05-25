@@ -301,7 +301,7 @@ export function Navbar() {
                       </div>
                       <button
                         onClick={() => removeItem(item.id, item.metadata?.size)}
-                        className="absolute top-3 right-3 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-3 right-3 text-muted-foreground/60 hover:text-destructive transition-colors p-1 rounded-full hover:bg-destructive/10"
                         title="Remove item"
                       >
                         <Trash2 className="h-4 w-4" />
