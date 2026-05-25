@@ -324,7 +324,7 @@ export default function AdminProductsPage() {
                             <MoreHorizontal className="h-5 w-5" />
                           </Button>
                         } />
-                        <DropdownMenuContent align="end" className="bg-background border-border shadow-xl">
+                        <DropdownMenuContent align="end" className="w-36 bg-background border-border shadow-xl">
                           <DropdownMenuItem
                             onClick={() => handleEditProduct(product)}
                             className="cursor-pointer flex items-center gap-2"

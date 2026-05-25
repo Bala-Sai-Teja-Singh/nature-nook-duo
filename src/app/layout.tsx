@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito, Playfair_Display } from "next/font/google";
+import { Quicksand, Lora } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AppProvider } from "@/providers/app-provider";
@@ -12,14 +12,14 @@ import { connectDB } from "@/lib/mongoose";
 import { SystemSettingsModel } from "@/models";
 import { ModuleProvider } from "@/providers/module-provider";
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
   display: "swap",
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const lora = Lora({
+  variable: "--font-lora",
   subsets: ["latin"],
   display: "swap",
 });
@@ -63,7 +63,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${nunito.variable} ${playfair.variable} h-full antialiased`}
+      className={`${quicksand.variable} ${lora.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
@@ -73,7 +73,7 @@ export default async function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className="antialiased font-nunito bg-background text-foreground">
+      <body className="antialiased font-sans bg-background text-foreground">
         <ThemeProvider>
           <TooltipProvider>
             <ModuleProvider initialModules={initialModules}>

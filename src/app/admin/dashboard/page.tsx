@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { DollarSign, Users, ShoppingCart, PackageSearch } from 'lucide-react';
 import { Reveal } from '@/components/shared/reveal';
+import Link from 'next/link';
 
 export default function DashboardOverviewPage() {
   const [stats, setStats] = useState({
@@ -31,10 +32,10 @@ export default function DashboardOverviewPage() {
   }, []);
 
   const statCards = [
-    { name: 'Total Revenue', value: `₹${stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, icon: <DollarSign className="h-6 w-6" />, color: 'text-green-600', bg: 'bg-green-100' },
-    { name: 'Active Orders', value: stats.totalOrders, icon: <ShoppingCart className="h-6 w-6" />, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { name: 'Total Products', value: stats.totalProducts, icon: <PackageSearch className="h-6 w-6" />, color: 'text-amber-600', bg: 'bg-amber-100' },
-    { name: 'Registered Users', value: stats.totalUsers, icon: <Users className="h-6 w-6" />, color: 'text-indigo-600', bg: 'bg-indigo-100' },
+    { name: 'Total Revenue', value: `₹${stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, icon: <DollarSign className="h-6 w-6" />, color: 'text-green-600', bg: 'bg-green-100', href: '/admin/revenue' },
+    { name: 'Active Orders', value: stats.totalOrders, icon: <ShoppingCart className="h-6 w-6" />, color: 'text-blue-600', bg: 'bg-blue-100', href: '/admin/orders' },
+    { name: 'Total Products', value: stats.totalProducts, icon: <PackageSearch className="h-6 w-6" />, color: 'text-amber-600', bg: 'bg-amber-100', href: '/admin/products' },
+    { name: 'Registered Users', value: stats.totalUsers, icon: <Users className="h-6 w-6" />, color: 'text-indigo-600', bg: 'bg-indigo-100', href: '/admin/users' },
   ];
 
   return (
@@ -53,15 +54,15 @@ export default function DashboardOverviewPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {statCards.map((stat, i) => (
-            <div key={i} className="glass rounded-2xl p-6 flex items-center gap-4 border border-border/50 shadow-sm transition-transform hover:-translate-y-1">
+            <Link href={stat.href} key={i} className="group glass rounded-2xl p-6 flex items-center gap-4 border border-border/50 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer block">
               <div className={`h-14 w-14 rounded-xl flex items-center justify-center shrink-0 ${stat.bg} ${stat.color}`}>
                 {stat.icon}
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">{stat.name}</p>
+                <p className="text-sm font-medium text-muted-foreground transition-colors group-hover:text-foreground">{stat.name}</p>
                 <h3 className="text-2xl font-bold text-foreground mt-1">{stat.value}</h3>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
